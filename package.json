@@ -1,0 +1,32 @@
+{
+  "name": "transformap-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node api.js",
+    "watch": "supervisor -w api.js server/**/* -- api.js",
+    "lint": "./node_modules/standard/bin/cmd.js api.js server/**/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://lab.allmende.io/transformaps/api.git"
+  },
+  "keywords": [
+    "transition",
+    "map",
+    "commons"
+  ],
+  "author": "transformap",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "americano": "^0.4.3",
+    "colors": "^1.1.2",
+    "config": "^1.19.0"
+  },
+  "devDependencies": {
+    "standard": "^6.0.4",
+    "supervisor": "^0.9.1"
+  }
+}
