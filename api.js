@@ -1,13 +1,12 @@
 const CONFIG = require('config')
-require('colors')
-console.log('config'.green, CONFIG)
-
+const __ = CONFIG.universalPath
+const _ = __.require('lib', 'utils')
 const americano = require('americano')
 
 americano.start(CONFIG.server, function (err, app, server) {
   if (err) {
-    console.error('err', err)
+    _.error(err, 'init err')
   } else {
-    console.log('server started!!!'.green)
+    _.success('server started!!!')
   }
 })
