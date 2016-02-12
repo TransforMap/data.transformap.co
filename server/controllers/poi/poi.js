@@ -14,8 +14,12 @@ module.exports = {
       res.json({poi: res})
     })
     .catch(function (err) {
-      _.error(err, 'poi get')
-      res.status(404).json({status: 'not_found'})
+      if (err.statusCode === 404) {
+        res.status(404).json({status: 'not_found'})
+      } else {
+        _.error(err, 'poi get err')
+        res.status(500).json({status: 'internal_error'})
+      }
     })
   }
 }
