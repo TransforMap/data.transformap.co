@@ -7,12 +7,17 @@ const nano = require('nano-blue')(fullUrl)
 
 module.exports = function (dbName) {
   const db = nano.use(dbName)
+  ensureDbExistance(dbName, db)
+  // /!\ we are not returning the ensureDbExistance promise
+  // so the database creation might happen after we return
+  return db
+}
 
-  return db.info()
-    .then((res) => _.success(`${dbName} database: exist`))
-    .catch(Create(dbName))
-    .then((res) => db)
-    .catch(_.ErrorRethrow('db init'))
+const ensureDbExistance = function (dbName, db) {
+  db.info()
+  .then((res) => _.success(`${dbName} database: exist`))
+  .catch(Create(dbName))
+  .catch(_.Error('ensureDbExistance'))
 }
 
 const Create = function (dbName) {
