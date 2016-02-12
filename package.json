@@ -7,7 +7,7 @@
     "test": "mocha",
     "start": "node api.js",
     "watch": "supervisor -w api.js server/**/* -- api.js",
-    "lint": "./node_modules/standard/bin/cmd.js api.js server/**/*"
+    "lint": "./node_modules/standard/bin/cmd.js api.js server/**/* test/*"
   },
   "repository": {
     "type": "git",
