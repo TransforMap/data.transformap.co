@@ -61,5 +61,11 @@ describe('poi model', function () {
       create.should.throw()
       done()
     })
+    it('should throw if status is set, with is only used for deleted/obsolete objects', function (done) {
+      var doc = {lat: "1", lon: "1" , type: "poi", name:'K', status: 'deleted'}
+      var create = function () { Poi.create(doc) }
+      create.should.throw()
+      done()
+    })
   })
 })

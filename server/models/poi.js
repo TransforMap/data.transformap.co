@@ -1,6 +1,6 @@
-// const CONFIG = require('config')
-// const __ = CONFIG.universalPath
-// const _ = __.require('lib', 'utils')
+const CONFIG = require('config')
+const __ = CONFIG.universalPath
+const _ = __.require('lib', 'utils')
 
 module.exports = {
   create: function (doc) {
@@ -23,6 +23,16 @@ module.exports = {
     if (doc.lon < -180 || doc.lon > 360) {
       throw new Error('coordinate lon out of range')
     }
+    if (doc.status) {
+      throw new Error('status tag not allowed, used only for deleted/obsolete objects')
+    }
+
+    // TODO add userid to doc.userid
+    // TODO add license from user profile to doc.copyright
+
+    doc.timestamp = _.now()
+    doc.version = 1
+
     return doc
   }
 }
