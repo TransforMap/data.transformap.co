@@ -3,7 +3,8 @@ const root = process.cwd() + '/'
 const paths = {
   root: '',
   controllers: 'server/controllers',
-  lib: 'server/lib'
+  lib: 'server/lib',
+  models: 'server/models'
 }
 
 const path = function (folder, name) {

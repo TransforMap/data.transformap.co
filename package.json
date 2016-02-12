@@ -4,7 +4,7 @@
   "description": "",
   "main": "api.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "node api.js",
     "watch": "supervisor -w api.js server/**/* -- api.js",
     "lint": "./node_modules/standard/bin/cmd.js api.js server/**/*"
@@ -28,6 +28,8 @@
     "nano-blue": "^0.3.0"
   },
   "devDependencies": {
+    "mocha": "^2.4.5",
+    "should": "^8.2.2",
     "standard": "^6.0.4",
     "supervisor": "^0.9.1"
   }
