@@ -1,0 +1,18 @@
+{
+  "_id": "3f99cbbccb02d48b595c369a1500242c - set by DB",
+  "_rev": "1-9e5732a15553e67f1de12f740449b9d8 - set by DB",
+  "userid":"'$UID' - set by API = couchdb id of user", 
+  "version" : "integer, set by API"
+  "previous": "optional: '$ID' - set by API if this objects superseded this ID",
+  "next": "optional: '$ID' - set by API if this objects is superseded by this ID",
+  "status":"optional: 'deleted' if deleted, 'obsolete' if superseded by a newer version",
+  "type": "poi",
+  "timestamp":"2147483647 - added by API",
+  "copyright": "CC-0 - added by API",
+  "lat": "float, -90 - +90",
+  "lon": "float, -180 - +180",
+  "name": "non-empty",
+  "tags": {
+    "any": "number of other tags, but no array (yet?)"
+  }
+}
