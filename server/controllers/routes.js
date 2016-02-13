@@ -1,3 +1,5 @@
+const poi = require('./poi/poi')
+
 module.exports = {
   'hello': {
     get: function (req, res, next) {
@@ -5,5 +7,10 @@ module.exports = {
       res.json({ hello: name })
     }
   },
-  'poi/:id': require('./poi/poi')
+  'poi': {
+    post: poi.post
+  },
+  'poi/:id': {
+    get: poi.get
+  }
 }
