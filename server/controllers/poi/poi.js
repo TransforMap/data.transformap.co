@@ -1,25 +1,25 @@
 const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
-const db = __.require('lib', 'db')('poi')
+const poi_ = __.require('controllers', 'poi/lib/poi')
+const error_ = __.require('lib', 'error')
 
 module.exports = {
   get: function (req, res) {
     const id = req.params.id
 
-    db.get(id)
-    .then(_.Log('poi get'))
-    .then(function (res) {
-      res = res || []
-      res.json({poi: res})
-    })
-    .catch(function (err) {
-      if (err.statusCode === 404) {
-        res.status(404).json({status: 'not_found'})
-      } else {
-        _.error(err, 'poi get err')
-        res.status(500).json({status: 'internal_error'})
-      }
-    })
+    if (! _.isUuid(id)){
+      error_.bundle(res, 'invalid id', 400, id)
+      return
+    }
+
+    poi_.byId(id)
+    .then(res.json.bind(res))
+    .catch(error_.Handler(res))
+  },
+  post: function (req, res) {
+    poi_.create(req.body)
+    .then(res.json.bind(res))
+    .catch(error_.Handler(res))
   }
 }
