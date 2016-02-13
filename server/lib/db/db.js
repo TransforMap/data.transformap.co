@@ -4,7 +4,7 @@ const _ = __.require('lib', 'utils')
 const dbC = CONFIG.db
 const fullUrl = `${dbC.protocol}://${dbC.username}:${dbC.password}@${dbC.host}:${dbC.port}`
 const nano = require('nano-blue')(fullUrl)
-const customMethods = require('./custom_methods')
+const customMethods = require('./custom_functions')
 
 module.exports = function (dbName) {
   const db = nano.use(dbName)
