@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node api.js",
-    "watch": "supervisor -w api.js server/**/* -- api.js",
+    "watch": "supervisor -w api.js,server -- api.js",
     "lint": "./node_modules/standard/bin/cmd.js api.js server/**/*"
   },
   "repository": {
