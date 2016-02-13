@@ -6,6 +6,7 @@ const error_ = __.require('lib', 'error')
 module.exports = {
   create: function (doc) {
     _.log(doc, 'poi creation doc')
+
     if (doc.name == null || doc.name === '') {
       throw error_.new('missing name', 400, doc)
     }
@@ -21,8 +22,17 @@ module.exports = {
     if (doc.lon < -180 || doc.lon > 360) {
       throw error_.new('coordinate lon out of range', 400, doc)
     }
+    if (doc.status) {
+      throw new Error('status tag not allowed, used only for deleted/obsolete objects')
+    }
+
+    // TODO add userid to doc.userid
+    // TODO add license from user profile to doc.copyright
+
     doc.type = 'poi'
     doc.timestamp = _.now()
+    doc.version = 1
+
     _.log(doc, 'poi creation formatted doc')
     return doc
   }
