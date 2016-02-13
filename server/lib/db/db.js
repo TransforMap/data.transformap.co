@@ -4,14 +4,16 @@ const _ = __.require('lib', 'utils')
 const dbC = CONFIG.db
 const fullUrl = `${dbC.protocol}://${dbC.username}:${dbC.password}@${dbC.host}:${dbC.port}`
 const nano = require('nano-blue')(fullUrl)
-const customMethods = require('./custom_functions')
+const buildDbApi = require('./build_db_api')
 
 module.exports = function (dbName) {
   const db = nano.use(dbName)
-  ensureDbExistance(dbName, db)
   // /!\ we are not returning the ensureDbExistance promise
   // so the database creation might happen after we return
-  return _.extend(db, customMethods(db))
+  ensureDbExistance(dbName, db)
+  // generate an API tailored to our needs
+  // rather than the raw nano API
+  return buildDbApi(db)
 }
 
 const ensureDbExistance = function (dbName, db) {
