@@ -4,8 +4,19 @@
   "type" : "version",
   "ref" : "UUID of type=geo object",
   "deleted" : "true as value if deleted",
-  "geometry" : {
-    "a geojson" : "object"
+  "geojson" : {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        15.144269,
+        47.050959
+      ]
+    },
+    "properties": {
+      "name": "Kino fsk",
+      "name:en": "Cinema fsk"
+    }
   },
   "meta" : {
     "author" : "Douglas Adamns",
