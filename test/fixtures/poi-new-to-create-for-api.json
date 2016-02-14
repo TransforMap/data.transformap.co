@@ -1,9 +1,13 @@
 {
-  "type": "poi",
-  "lat": 52.5015918,
-  "lon": 13.4146103,
-  "name": "Kino fsk",
-  "tags": {
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      15.144269,
+      47.050959
+    ]
+  },
+  "properties": {
     "name": "Kino fsk",
     "name:en": "Cinema fsk",
     "official_name": "fsk-Kino und Peripher Filmverleih",
