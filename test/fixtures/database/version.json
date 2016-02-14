@@ -1,0 +1,14 @@
+{
+  "_id" : "UUID",
+  "_rev" : "~~~",
+  "type" : "version",
+  "ref" : "UUID of type=geo object",
+  "deleted" : "true as value if deleted",
+  "geometry" : {
+    "a geojson" : "object"
+  },
+  "meta" : {
+    "author" : "Douglas Adamns",
+    "timestamp": 214143242
+  }
+}
