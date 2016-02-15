@@ -25,44 +25,38 @@ describe('poi model', function () {
       create().should.be.an.Object()
       done()
     })
-    it('should throw if not of type poi', function (done) {
-      const doc = { name: 'K', lat: 1, lon: 1 }
-      const create = function () { Poi.create(doc) }
-      create.should.throw()
-      done()
-    })
     it('should throw if the coordinates are not provided', function (done) {
-      const doc = { name: 'K', lat: null, lon: null, type: 'poi' }
+      const doc = { name: 'K', lat: null, lon: null }
       const create = function () { Poi.create(doc) }
       create.should.throw()
       done()
     })
     it('should throw if the coordinates are of type number', function (done) {
-      const doc = { name: 'K', lat: '1', lon: '1', type: 'poi' }
+      const doc = { name: 'K', lat: '1', lon: '1' }
       const create = function () { Poi.create(doc) }
       create.should.throw()
       done()
     })
     it('should throw if the coordinates are out of bounds', function (done) {
-      const doc = { name: 'K', lat: -200, lon: 2000, type: 'poi' }
+      const doc = { name: 'K', lat: -200, lon: 2000 }
       const create = function () { Poi.create(doc) }
       create.should.throw()
       done()
     })
     it('should throw if the doc has no name', function (done) {
-      const doc = { lat: '1', lon: '1', type: 'poi' }
+      const doc = { lat: '1', lon: '1' }
       const create = function () { Poi.create(doc) }
       create.should.throw()
       done()
     })
     it('should throw if the name is empty', function (done) {
-      const doc = { name: '', lat: '1', lon: '1', type: 'poi' }
+      const doc = { name: '', lat: '1', lon: '1' }
       const create = function () { Poi.create(doc) }
       create.should.throw()
       done()
     })
     it('should throw if status is set, with is only used for deleted/obsolete objects', function (done) {
-      const doc = {lat: '1', lon: '1', type: 'poi', name: 'K', status: 'deleted'}
+      const doc = {lat: '1', lon: '1', name: 'K', status: 'deleted'}
       const create = function () { Poi.create(doc) }
       create.should.throw()
       done()
