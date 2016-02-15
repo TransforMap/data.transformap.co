@@ -4,8 +4,7 @@ const loggers = require('inv-loggers')
 const utils = {
   // Couchdb uuid
   isUuid: function (id) {
-    if (! _.isString(id)) { return false }
-    return /^[0-9a-f]{32}$/.test(id)
+    return _.isString(id) && /^[0-9a-f]{32}$/.test(id)
   }
 }
 
