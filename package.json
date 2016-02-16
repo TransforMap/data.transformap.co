@@ -28,6 +28,7 @@
     "nano-blue": "^0.3.0"
   },
   "devDependencies": {
+    "git-hooks": "^1.0.2",
     "mocha": "^2.4.5",
     "should": "^8.2.2",
     "standard": "^6.0.4",
