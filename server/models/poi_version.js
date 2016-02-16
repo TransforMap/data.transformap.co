@@ -3,10 +3,13 @@ const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const error_ = __.require('lib', 'error')
 
-module.exports = {
+const PoiVersion = {
   create: function (doc) {
     _.log(doc, 'poi creation doc')
 
+    if (!_.isUuid(doc.meta)) {
+      throw error_.new('missing meta id', 500, doc)
+    }
     if (doc.name == null || doc.name === '') {
       throw error_.new('missing name', 400, doc)
     }
@@ -29,11 +32,24 @@ module.exports = {
     // TODO add userid to doc.userid
     // TODO add license from user profile to doc.copyright
 
-    doc.type = 'poi'
+    doc.type = 'version'
     doc.timestamp = _.now()
     doc.version = 1
 
     _.log(doc, 'poi creation formatted doc')
     return doc
+  },
+  parseCurrentVersion: function (versionDoc) {
+    const metaId = versionDoc.meta
+    versionDoc = _.omit(versionDoc, privateAttributes)
+    // faking to return the meta document
+    // while it's just the last version
+    versionDoc._id = metaId
+    return versionDoc
   }
 }
+
+// attributes that should not be returned to the end user
+const privateAttributes = ['type', 'meta', '_id', '_rev']
+
+module.exports = PoiVersion

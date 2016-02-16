@@ -8,12 +8,12 @@ module.exports = {
   get: function (req, res) {
     const id = req.params.id
 
-    if (! _.isUuid(id)){
+    if (!_.isUuid(id)) {
       error_.bundle(res, 'invalid id', 400, id)
       return
     }
 
-    poi_.byId(id)
+    poi_.currentVersionById(id)
     .then(res.json.bind(res))
     .catch(error_.Handler(res))
   },
