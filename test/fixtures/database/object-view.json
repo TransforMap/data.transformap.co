@@ -1,0 +1,40 @@
+{
+  "_id" : "UUID of geo.object of interest for external world",
+  "_rev" : "~~~~",
+  "type" : "object",
+  "current" : {
+    "copy" : "of all attributes of the current objects for indexing",
+    "ref" : "UUID of current object",
+    "deleted" : "true as value if deleted",
+    "meta" : { "author":"x","timestamp":123 },
+    "geojson" : {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.144269,
+          47.050959
+        ]
+      },
+      "properties": {
+        "name": "Kino fsk",
+        "name:en": "Cinema fsk"
+      }
+    }
+  },
+  "journal" : [
+    {
+      "id" : "db UUID of the specific version object (v1)",
+      "timestamp" : 12354354,
+      "author" : "Douglas Adams",
+      "description" : "this is the commit message"
+    },
+    {
+      "id" : "db UUID of the specific database (v2)",
+      "timestamp" : 1235435454353,
+      "author" : "Douglas Adams",
+      "description" : "this is the commit message"
+    }
+  ]
+}
+

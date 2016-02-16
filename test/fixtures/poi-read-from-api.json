@@ -1,31 +1,40 @@
 {
-  "id": 350460866,
-  "version": 1,
-  "userid":"3f99cbbccb02d48b595c369a1500242c", 
+  "id": "3f99cbbccb02d48b595c369a150027ec",
   "type": "poi",
-  "timestamp":"2014-11-06T21:48:24Z",
-  "copyright": "This data is from transformap.co. It is made available via CC-0",
-  "lat": 52.5015918,
-  "lon": 13.4146103,
-  "name": "Kino fsk",
-  "tags": {
-    "name:en": "Cinema fsk",
-    "official_name": "fsk-Kino und Peripher Filmverleih",
-    "official_name:en": "fsk-cinema and Peripher movie rental",
-    "addr:city": "Berlin",
-    "addr:country": "DE",
-    "addr:housenumber": "2",
-    "addr:postcode": "10969",
-    "addr:street": "Segitzdamm",
-    "addr:suburb": "Kreuzberg",
-    "identity": "solidarity_economy",
-    "fulfils_needs":"knowledge&skills",
-    "brand": "independent",
-    "contact:email": "post@fsk-kino.de",
-    "contact:phone": "+49 30 6142464",
-    "contact:website": "http://fsk-kino.de",
-    "image": "File:FSK-Berlin.jpg",
-    "wikidata": "Q12435987",
-    "osm-tag": "amenity=cinema"
+  "geojson" : {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        15.144269,
+        47.050959
+      ]
+    },
+    "properties": {
+      "name": "Kino fsk",
+      "name:en": "Cinema fsk",
+      "official_name": "fsk-Kino und Peripher Filmverleih",
+      "official_name:en": "fsk-cinema and Peripher movie rental",
+      "addr:city": "Berlin",
+      "addr:country": "DE",
+      "addr:housenumber": "2",
+      "addr:postcode": "10969",
+      "addr:street": "Segitzdamm",
+      "addr:suburb": "Kreuzberg",
+      "identity": "solidarity_economy",
+      "fulfils_needs":"knowledge&skills",
+      "brand": "independent",
+      "contact:email": "post@fsk-kino.de",
+      "contact:phone": "+49 30 6142464",
+      "contact:website": "http://fsk-kino.de",
+      "image": "File:FSK-Berlin.jpg",
+      "wikidata": "Q12435987",
+      "osm-tag": "amenity=cinema"
+    }
+  },
+  "meta" : {
+    "userid":"3f99cbbccb02d48b595c369a1500242c",
+    "timestamp":"2014-11-06T21:48:24Z",
+    "copyright": "This data is from transformap.co. It is made available via CC-0"
   }
 }
