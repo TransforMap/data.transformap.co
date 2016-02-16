@@ -11,9 +11,9 @@ const PoiVersion = {
     if (!_.isUuid(doc.meta)) {
       throw error_.new('missing meta id', 500, doc)
     }
-    const geojson_testresult = gj_tools_.isGeoJSON(doc.geojson, true);
-    if(geojson_testresult != true) {
-      throw error_.complete(geojson_testresult,400,doc)
+    const geojson_testresult = gj_tools_.isGeoJSON(doc.geojson, true)
+    if (geojson_testresult !== true) {
+      throw error_.complete(geojson_testresult, 400, doc)
     }
     const lat = doc.geojson.geometry.coordinates[0]
     const lon = doc.geojson.geometry.coordinates[1]

@@ -1,6 +1,6 @@
 const CONFIG = require('config')
 const __ = CONFIG.universalPath
-const _ = __.require('lib','utils')
+const _ = __.require('lib', 'utils')
 require('should')
 
 const it = global.it // for lint
@@ -18,10 +18,10 @@ describe('poi version model', function () {
 
     const correct_doc = {
       meta: someMetaId,
-      geojson : {
-        type: "Feature",
+      geojson: {
+        type: 'Feature',
         geometry: {
-          type: "Point",
+          type: 'Point',
           coordinates: [
             15.144269,
             47.050959
@@ -30,7 +30,7 @@ describe('poi version model', function () {
         properties: {
           name: 'Jon'
         }
-      },
+      }
     }
 
     it('should return an object if the doc is valid', function (done) {
@@ -45,8 +45,9 @@ describe('poi version model', function () {
       doc.geojson.geometry.coordinates = null
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
-      try { create() }
-      catch (err) {
+      try {
+        create()
+      } catch (err) {
         console.log(err)
         err.message.should.equal('invalid GeoJSON type supplied')
       }
@@ -57,8 +58,9 @@ describe('poi version model', function () {
       doc.geojson.geometry.coordinates[0] = -200
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
-      try { create() }
-      catch (err) {
+      try {
+        create()
+      } catch (err) {
         console.log(err)
         err.message.should.equal('coordinate lat out of range')
       }
@@ -69,8 +71,9 @@ describe('poi version model', function () {
       doc.geojson.geometry.coordinates[1] = 2000
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
-      try { create() }
-      catch (err) {
+      try {
+        create()
+      } catch (err) {
         console.log(err)
         err.message.should.equal('coordinate lon out of range')
       }
@@ -88,8 +91,9 @@ describe('poi version model', function () {
       doc.geojson.properties.name = ''
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
-      try { create() }
-      catch (err) {
+      try {
+        create()
+      } catch (err) {
         console.log(err)
         err.message.should.equal('missing name')
       }
@@ -100,8 +104,9 @@ describe('poi version model', function () {
       doc.meta = {}
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
-      try { create() }
-      catch (err) {
+      try {
+        create()
+      } catch (err) {
         console.log(err)
         err.message.should.equal('missing meta id')
       }

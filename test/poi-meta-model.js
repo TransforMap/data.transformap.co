@@ -12,16 +12,16 @@ const someMetaId = 'caa653ce22d3213f54338dd45300041c'
 const validVersionDoc = function (metaId) {
   return {
     _id: 'abf653ce22d3213f54338dd45300041c',
-    type: "poi",
+    type: 'poi',
     geometry: {
-      "type": "Point",
-      "coordinates": [
+      type: 'Point',
+      coordinates: [
         15.144269,
         47.050959
       ]
     },
     properties: {
-      name: 'Transition House',
+      name: 'Transition House'
     },
     meta: metaId
   }
