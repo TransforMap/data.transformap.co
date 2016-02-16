@@ -49,6 +49,14 @@ const syncDesignDocs = function (db, designDocs) {
 
 const syncDesignDoc = function (db, designDocName) {
   const designDocId = `_design/${designDocName}`
+  return getDesignDocFile(designDocName)
+    .then(function (designDocFile) {
+      return getCurrentDesignDoc(db, designDocId)
+        .then(updateDesignDoc.bind(null, db, designDocId, designDocFile))
+    })
+}
+
+const getDesignDocFile = function (designDocName) {
   const designDocPath = __.path('designDocs', `${designDocName}.json`)
   return fs.readFile(designDocPath)
     .catch(function (err) {
@@ -59,7 +67,9 @@ const syncDesignDoc = function (db, designDocName) {
         initDoc = JSON.stringify(emtpyDesignDoc(designDocName), null, 4)
         // creating the design doc file but not waiting for its creation
         fs.writeFile(designDocPath, initDoc)
-        .then(() => { _.log(designDocPath, 'design doc file created')})
+        .then(function () {
+          _.log(designDocPath, 'design doc file created')
+        })
 
         return initDoc
       } else {
@@ -67,43 +77,45 @@ const syncDesignDoc = function (db, designDocName) {
         throw err
       }
     })
-    .then(function (designDocFile) {
-      return db.get(designDocId)
-        .spread(function (body, header) {
-          return body
-        })
-        .catch(function (err) {
-          if (err.statusCode === 404) {
-            _.info(designDocId, 'design doc not found: creating')
-            // pass an empty document to trigger a document update
-            return {}
-          } else {
-            throw err
-          }
-        })
-        .then(function (currentDesignDoc) {
-          const rev = currentDesignDoc && currentDesignDoc._rev
-          // delete the rev to be able to compare object
-          delete currentDesignDoc._rev
-          // designDocFile should be a stringified object
-          currentDesignDocStr = JSON.stringify(currentDesignDoc)
-          // comparison is made without spaces to avoid false negative
-          if (removeSpaces(designDocFile) === removeSpaces(currentDesignDocStr)) {
-            _.info(designDocId, 'design doc up-to-date')
-          } else {
-            _.info(designDocId, 'updating design doc')
-            const update = JSON.parse(designDocFile)
-            update.rev = rev
-            return db.insert(update)
-              .spread(function (body) {
-                _.success(designDocId, 'design doc updated')
-              })
-              .catch(function (err) {
-                _.error(err.request, err.message)
-              })
-          }
-        })
+}
+
+const getCurrentDesignDoc = function (db, designDocId) {
+  return db.get(designDocId)
+    .spread(function (body, header) {
+      return body
     })
+    .catch(function (err) {
+      if (err.statusCode === 404) {
+        _.info(designDocId, 'design doc not found: creating')
+        // pass an empty document to trigger a document update
+        return {}
+      } else {
+        throw err
+      }
+    })
+}
+
+const updateDesignDoc = function (db, designDocId, designDocFile, currentDesignDoc) {
+  const rev = currentDesignDoc && currentDesignDoc._rev
+  // delete the rev to be able to compare object
+  delete currentDesignDoc._rev
+  // designDocFile should be a stringified object
+  currentDesignDocStr = JSON.stringify(currentDesignDoc)
+  // comparison is made without spaces to avoid false negative
+  if (removeSpaces(designDocFile) === removeSpaces(currentDesignDocStr)) {
+    _.info(designDocId, 'design doc up-to-date')
+  } else {
+    _.info(designDocId, 'updating design doc')
+    const update = JSON.parse(designDocFile)
+    update.rev = rev
+    return db.insert(update)
+      .spread(function (body) {
+        _.success(designDocId, 'design doc updated')
+      })
+      .catch(function (err) {
+        _.error(err.request, err.message)
+      })
+  }
 }
 
 const emtpyDesignDoc = function (designDocName) {
