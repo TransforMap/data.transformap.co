@@ -40,7 +40,7 @@ const PoiVersion = {
     return doc
   },
   parseCurrentVersion: function (versionDoc) {
-    metaId = versionDoc.meta
+    const metaId = versionDoc.meta
     versionDoc = _.omit(versionDoc, privateAttributes)
     // faking to return the meta document
     // while it's just the last version

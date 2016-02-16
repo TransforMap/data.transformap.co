@@ -33,25 +33,25 @@ describe('poi version model', function () {
       done()
     })
     it('should throw if the coordinates are of type number', function (done) {
-      const doc = { name: 'K', lat: '1', lon: '1' , meta: someMetaId}
+      const doc = { name: 'K', lat: '1', lon: '1', meta: someMetaId }
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
       done()
     })
     it('should throw if the coordinates are out of bounds', function (done) {
-      const doc = { name: 'K', lat: -200, lon: 2000 , meta: someMetaId}
+      const doc = { name: 'K', lat: -200, lon: 2000, meta: someMetaId }
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
       done()
     })
     it('should throw if the doc has no name', function (done) {
-      const doc = { lat: '1', lon: '1' , meta: someMetaId}
+      const doc = { lat: '1', lon: '1', meta: someMetaId }
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
       done()
     })
     it('should throw if the name is empty', function (done) {
-      const doc = { name: '', lat: '1', lon: '1' , meta: someMetaId}
+      const doc = { name: '', lat: '1', lon: '1', meta: someMetaId }
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
       done()
@@ -63,7 +63,7 @@ describe('poi version model', function () {
       done()
     })
     it('should throw if the meta id is missing', function (done) {
-      const doc = { lat: 1, lon: 1, name: 'K'}
+      const doc = { lat: 1, lon: 1, name: 'K' }
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
       done()

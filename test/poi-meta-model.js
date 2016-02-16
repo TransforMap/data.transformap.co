@@ -7,7 +7,6 @@ const it = global.it // for lint
 const describe = global.describe // for lint
 
 const PoiMeta = __.require('models', 'poi_meta')
-const PoiVersion = __.require('models', 'poi_version')
 const someMetaId = 'caa653ce22d3213f54338dd45300041c'
 
 const validVersionDoc = function (metaId) {
@@ -19,7 +18,6 @@ const validVersionDoc = function (metaId) {
     meta: metaId
   }
 }
-
 
 describe('poi meta model', function () {
   describe('create', function () {
@@ -48,7 +46,6 @@ describe('poi meta model', function () {
       done()
     })
     it('should return an object', function (done) {
-      someMetaId = 'caa653ce22d3213f54338dd45300041c'
       const metaDoc = {
         _id: someMetaId,
         refs: []
@@ -59,35 +56,32 @@ describe('poi meta model', function () {
       done()
     })
     it('should return an object with one more ref', function (done) {
-      someMetaId = 'caa653ce22d3213f54338dd45300041c'
       const metaDoc = {
         _id: someMetaId,
         refs: []
       }
       const versionDoc = validVersionDoc(someMetaId)
-      updatedMetaDoc = PoiMeta.update(metaDoc, versionDoc)
+      const updatedMetaDoc = PoiMeta.update(metaDoc, versionDoc)
       updatedMetaDoc.refs.length.should.equal(1)
       done()
     })
     it('should return an object with refs ids only', function (done) {
-      someMetaId = 'caa653ce22d3213f54338dd45300041c'
       const metaDoc = {
         _id: someMetaId,
         refs: []
       }
       const versionDoc = validVersionDoc(someMetaId)
-      updatedMetaDoc = PoiMeta.update(metaDoc, versionDoc)
+      const updatedMetaDoc = PoiMeta.update(metaDoc, versionDoc)
       _.isUuid(updatedMetaDoc.refs[0]).should.equal(true)
       done()
     })
     it('should return an object with current set to the versionDoc', function (done) {
-      someMetaId = 'caa653ce22d3213f54338dd45300041c'
       const metaDoc = {
         _id: someMetaId,
         refs: []
       }
       const versionDoc = validVersionDoc(someMetaId)
-      updatedMetaDoc = PoiMeta.update(metaDoc, versionDoc)
+      const updatedMetaDoc = PoiMeta.update(metaDoc, versionDoc)
       updatedMetaDoc.current.should.equal(versionDoc)
       done()
     })

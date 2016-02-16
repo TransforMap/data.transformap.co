@@ -2,15 +2,15 @@ const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 
-module.exports = function (db, designName) {
+module.exports = function (db, designName) {
   const viewByKeys = function (viewName, keys) {
     return db.view(designName, viewName, {
-        keys: keys,
-        include_docs: true
-      })
-      .then(parseNanoResponse)
-      .then(parseDocs)
-      .then(_.Log('viewByKeys'))
+      keys: keys,
+      include_docs: true
+    })
+    .then(parseNanoResponse)
+    .then(parseDocs)
+    .then(_.Log('viewByKeys'))
   }
 
   const get = function (id) {
@@ -23,7 +23,7 @@ module.exports = function (db, designName) {
   }
 
   return {
-    get:get,
+    get: get,
     post: insert,
     // returns with the udpated _id and _rev
     postAndReturn: function (doc) {
@@ -46,7 +46,6 @@ module.exports = function (db, designName) {
     viewByKeys: viewByKeys
   }
 }
-
 
 const parseDocs = function (body) {
   return body.rows.map(_.property('doc'))
