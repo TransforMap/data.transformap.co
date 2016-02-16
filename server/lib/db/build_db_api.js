@@ -13,14 +13,30 @@ module.exports = function (db, designName) {
       .then(_.Log('viewByKeys'))
   }
 
+  const get = function (id) {
+    return db.get(id)
+      .then(parseNanoResponse)
+  }
+  const insert = function (doc) {
+    return db.insert(doc)
+      .then(parseNanoResponse)
+  }
+
   return {
-    get: function (id) {
-      return db.get(id)
-        .then(parseNanoResponse)
+    get:get,
+    post: insert,
+    // returns with the udpated _id and _rev
+    postAndReturn: function (doc) {
+      return insert(doc)
+        .then((res) => get(res.id))
     },
-    post: function (doc) {
-      return db.insert(doc)
-        .then(parseNanoResponse)
+    update: function (id, updateFn) {
+      return get(id)
+        .then(updateFn)
+        .then(insert)
+        .then(_.Log('update'))
+        // TODO: catch insert errors to retry once
+        // to address possible conflicts
     },
     viewByKey: function (viewName, key) {
       return viewByKeys(viewName, [key])

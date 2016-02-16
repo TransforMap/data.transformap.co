@@ -3,6 +3,6 @@
 module.exports = [
   {
     name: 'poi',
-    designDocs: ['poi']
+    designDocs: ['poi', 'versions']
   }
 ]

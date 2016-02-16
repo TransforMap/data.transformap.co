@@ -7,6 +7,9 @@ module.exports = {
   create: function (doc) {
     _.log(doc, 'poi creation doc')
 
+    if (!_.isUuid(doc.meta)) {
+      throw error_.new('missing meta id', 500, doc)
+    }
     if (doc.name == null || doc.name === '') {
       throw error_.new('missing name', 400, doc)
     }
@@ -29,7 +32,7 @@ module.exports = {
     // TODO add userid to doc.userid
     // TODO add license from user profile to doc.copyright
 
-    doc.type = 'poi'
+    doc.type = 'version'
     doc.timestamp = _.now()
     doc.version = 1
 
