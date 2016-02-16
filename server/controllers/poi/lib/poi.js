@@ -4,8 +4,8 @@ const _ = __.require('lib', 'utils')
 const promises_ = __.require('lib', 'promises')
 const error_ = __.require('lib', 'error')
 const db = __.require('lib', 'db/db')('poi', 'poi')
-const PoiVersion = __.require('models', 'poi_version')
 const PoiMeta = __.require('models', 'poi_meta')
+const versions_ = require('./versions')
 
 const poi_ = {
   byId: function (id){
@@ -18,10 +18,8 @@ const poi_ = {
       .then(_.Log('meta post res'))
       // then create a first version document
       .then(function (res) {
-        metaId = res.id
-        // keeping a reference to the meta document
-        doc.meta = metaId
-        return db.postAndReturn(PoiVersion.create(doc))
+        const metaId = res.id
+        return versions_.create(metaId, doc)
           // then update the meta document to reference the first version
           .then(function (firstVersionDoc) {
             return db.update(metaId, function (metaDoc){
