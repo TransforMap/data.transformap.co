@@ -1,5 +1,6 @@
 const CONFIG = require('config')
 const __ = CONFIG.universalPath
+const _ = __.require('lib','utils')
 require('should')
 
 const it = global.it // for lint
@@ -14,127 +15,96 @@ describe('poi version model', function () {
       PoiVersion.create.should.be.a.Function()
       done()
     })
-    it('should return an object if the doc is valid', function (done) {
-      const doc = {
-        meta: someMetaId,
-        geojson : {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [
-              15.144269,
-              47.050959
-            ]
-          }
+
+    const correct_doc = {
+      meta: someMetaId,
+      geojson : {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [
+            15.144269,
+            47.050959
+          ]
         },
         properties: {
           name: 'Jon'
         }
-      }
+      },
+    }
+
+    it('should return an object if the doc is valid', function (done) {
+      const doc = correct_doc
       const create = function () { return PoiVersion.create(doc) }
       create.should.not.throw()
       create().should.be.an.Object()
       done()
     })
     it('should throw if the geojson is not correct', function (done) {
-      const doc = {
-        meta: someMetaId,
-        geojson : {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [
-            ]
-          }
-        },
-        properties: {
-          name: 'Jon'
-        }
-      }
+      var doc = _.cloneDeep(correct_doc)
+      doc.geojson.geometry.coordinates = null
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
+      try { create() }
+      catch (err) {
+        console.log(err)
+        err.message.should.equal('invalid GeoJSON type supplied')
+      }
       done()
     })
-    it('should throw if the coordinates are out of bounds', function (done) {
-      const doc = {
-        meta: someMetaId,
-        geojson : {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [
-              -200,
-              2000
-            ]
-          }
-        },
-        properties: {
-          name: 'Jon'
-        }
-      }
+    it('should throw if latitude is out of bounds', function (done) {
+      var doc = _.cloneDeep(correct_doc)
+      doc.geojson.geometry.coordinates[0] = -200
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
+      try { create() }
+      catch (err) {
+        console.log(err)
+        err.message.should.equal('coordinate lat out of range')
+      }
+      done()
+    })
+    it('should throw if longitude is out of bounds', function (done) {
+      var doc = _.cloneDeep(correct_doc)
+      doc.geojson.geometry.coordinates[1] = 2000
+      const create = function () { PoiVersion.create(doc) }
+      create.should.throw()
+      try { create() }
+      catch (err) {
+        console.log(err)
+        err.message.should.equal('coordinate lon out of range')
+      }
       done()
     })
     it('should throw if the doc has no name', function (done) {
-      const doc = {
-        meta: someMetaId,
-        geojson : {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [
-              15.144269,
-              47.050959
-            ]
-          }
-        },
-        properties: {
-        }
-      }
+      var doc = _.cloneDeep(correct_doc)
+      doc.geojson.properties = {}
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
       done()
     })
     it('should throw if the name is empty', function (done) {
-      const doc = {
-        meta: someMetaId,
-        geojson : {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [
-              15.144269,
-              47.050959
-            ]
-          }
-        },
-        properties: {
-          name: ''
-        }
-      }
+      var doc = _.cloneDeep(correct_doc)
+      doc.geojson.properties.name = ''
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
+      try { create() }
+      catch (err) {
+        console.log(err)
+        err.message.should.equal('missing name')
+      }
       done()
     })
     it('should throw if the meta id is missing', function (done) {
-      const doc = {
-        geojson : {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [
-              15.144269,
-              47.050959
-            ]
-          }
-        },
-        properties: {
-          name: 'T'
-        }
-      }
+      var doc = _.cloneDeep(correct_doc)
+      doc.meta = {}
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
+      try { create() }
+      catch (err) {
+        console.log(err)
+        err.message.should.equal('missing meta id')
+      }
       done()
     })
   })
