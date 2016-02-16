@@ -4,7 +4,9 @@ const paths = {
   root: '',
   controllers: 'server/controllers',
   lib: 'server/lib',
-  models: 'server/models'
+  models: 'server/models',
+  db: 'db',
+  designDocs: 'db/design_docs'
 }
 
 const path = function (folder, name) {

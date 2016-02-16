@@ -1,0 +1,9 @@
+{
+   "_id": "_design/poi",
+   "language": "javascript",
+   "views": {
+       "byId": {
+           "map": "function(doc) {\n  if (doc.type === 'meta') {\n    emit(doc._id, null)\n  }\n}"
+       }
+   }
+}
