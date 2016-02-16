@@ -5,10 +5,11 @@ const promises_ = __.require('lib', 'promises')
 const error_ = __.require('lib', 'error')
 const db = __.require('lib', 'db/db')('poi', 'poi')
 const PoiMeta = __.require('models', 'poi_meta')
+const PoiVersion = __.require('models', 'poi_version')
 const versions_ = require('./versions')
 
 const poi_ = {
-  byId: function (id){
+  byId: function (id) {
     return db.viewByKey('byId', id)
       .then(_.Log('poi byId'))
   },
@@ -29,6 +30,11 @@ const poi_ = {
       })
       .then(_.Log('poi created'))
       .catch(_.ErrorRethrow('poi creation err'))
+  },
+  currentVersionById: function (id) {
+    return db.viewByKey('currentVersionById', id)
+      .then(_.Log('currentVersionById'))
+      .then(PoiVersion.parseCurrentVersion)
   }
 }
 

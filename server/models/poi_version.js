@@ -3,7 +3,7 @@ const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const error_ = __.require('lib', 'error')
 
-module.exports = {
+const PoiVersion = {
   create: function (doc) {
     _.log(doc, 'poi creation doc')
 
@@ -38,5 +38,18 @@ module.exports = {
 
     _.log(doc, 'poi creation formatted doc')
     return doc
+  },
+  parseCurrentVersion: function (versionDoc) {
+    metaId = versionDoc.meta
+    versionDoc = _.omit(versionDoc, privateAttributes)
+    // faking to return the meta document
+    // while it's just the last version
+    versionDoc._id = metaId
+    return versionDoc
   }
 }
+
+// attributes that should not be returned to the end user
+const privateAttributes = ['type', 'meta', '_id', '_rev']
+
+module.exports = PoiVersion

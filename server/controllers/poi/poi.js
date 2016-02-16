@@ -2,6 +2,7 @@ const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const poi_ = __.require('controllers', 'poi/lib/poi')
+const versions_ = require('./lib/versions')
 const error_ = __.require('lib', 'error')
 
 module.exports = {
@@ -13,7 +14,7 @@ module.exports = {
       return
     }
 
-    poi_.byId(id)
+    poi_.currentVersionById(id)
     .then(res.json.bind(res))
     .catch(error_.Handler(res))
   },

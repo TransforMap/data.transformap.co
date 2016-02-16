@@ -4,6 +4,9 @@
    "views": {
        "byId": {
            "map": "function(doc) {\n  if (doc.type === 'meta') {\n    emit(doc._id, null)\n  }\n}"
+       },
+       "currentVersionById": {
+           "map": "function(doc) {\n  if (doc.type === 'meta') {\n    emit(doc._id, {'_id': doc.current._id})\n  }\n}"
        }
    }
 }
