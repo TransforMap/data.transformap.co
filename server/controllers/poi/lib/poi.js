@@ -30,6 +30,10 @@ const poi_ = {
       .catch(_.ErrorRethrow('poi creation err'))
   },
   currentVersionById: function (id) {
+    // there is some magic happening in the currentVersionById view (see db/design_docs/poi.json):
+    // as the meta document emits the id of another document in the format {'_id': doc.current._id},
+    // using the parameter include_doc will not return the emitting document but the document with the id doc.current._id.
+    // This is called Linked documents https://wiki.apache.org/couchdb/Introduction_to_CouchDB_views#Linked_documents
     return db.viewByKey('currentVersionById', id)
       .then(_.Log('currentVersionById'))
       .then(PoiVersion.parseCurrentVersion)
