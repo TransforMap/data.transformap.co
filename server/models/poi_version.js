@@ -2,7 +2,7 @@ const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const error_ = __.require('lib', 'error')
-const gj_tools_ = require('geojson-tools')
+const geojson = require('geojson-tools')
 
 const PoiVersion = {
   create: function (doc) {
@@ -11,7 +11,7 @@ const PoiVersion = {
     if (!_.isUuid(doc.meta)) {
       throw error_.new('missing meta id', 500, doc)
     }
-    const geojson_testresult = gj_tools_.isGeoJSON(doc.geojson, true)
+    const geojson_testresult = geojson.isGeoJSON(doc.geojson, true)
     if (geojson_testresult !== true) {
       throw error_.complete(geojson_testresult, 400, doc)
     }
