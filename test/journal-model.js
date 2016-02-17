@@ -6,7 +6,7 @@ require('should')
 const it = global.it // for lint
 const describe = global.describe // for lint
 
-const PoiMeta = __.require('models', 'poi_meta')
+const Journal = __.require('models', 'journal')
 const someJournalId = 'caa653ce22d3213f54338dd45300041c'
 
 const validVersionDoc = function (journalId) {
@@ -30,27 +30,27 @@ const validVersionDoc = function (journalId) {
 describe('journal model', function () {
   describe('create', function () {
     it('should be a function', function (done) {
-      PoiMeta.create.should.be.a.Function()
+      Journal.create.should.be.a.Function()
       done()
     })
     it('should return an object', function (done) {
-      PoiMeta.create.should.not.throw()
-      PoiMeta.create().should.be.an.Object()
+      Journal.create.should.not.throw()
+      Journal.create().should.be.an.Object()
       done()
     })
     it('should have type set to journal', function (done) {
-      PoiMeta.create().type.should.equal('journal')
+      Journal.create().type.should.equal('journal')
       done()
     })
     it('should return an object with an array of refs', function (done) {
-      PoiMeta.create().refs.should.be.an.Array()
+      Journal.create().refs.should.be.an.Array()
       done()
     })
   })
 
   describe('update', function () {
     it('should be a function', function (done) {
-      PoiMeta.update.should.be.a.Function()
+      Journal.update.should.be.a.Function()
       done()
     })
     it('should return an object', function (done) {
@@ -59,8 +59,8 @@ describe('journal model', function () {
         refs: []
       }
       const versionDoc = validVersionDoc(someJournalId)
-      PoiMeta.update(journalDoc, versionDoc).should.not.throw()
-      PoiMeta.update(journalDoc, versionDoc).should.be.an.Object()
+      Journal.update(journalDoc, versionDoc).should.not.throw()
+      Journal.update(journalDoc, versionDoc).should.be.an.Object()
       done()
     })
     it('should return an object with one more ref', function (done) {
@@ -69,7 +69,7 @@ describe('journal model', function () {
         refs: []
       }
       const versionDoc = validVersionDoc(someJournalId)
-      const updatedMetaDoc = PoiMeta.update(journalDoc, versionDoc)
+      const updatedMetaDoc = Journal.update(journalDoc, versionDoc)
       updatedMetaDoc.refs.length.should.equal(1)
       done()
     })
@@ -79,7 +79,7 @@ describe('journal model', function () {
         refs: []
       }
       const versionDoc = validVersionDoc(someJournalId)
-      const updatedMetaDoc = PoiMeta.update(journalDoc, versionDoc)
+      const updatedMetaDoc = Journal.update(journalDoc, versionDoc)
       _.isUuid(updatedMetaDoc.refs[0]).should.equal(true)
       done()
     })
@@ -89,7 +89,7 @@ describe('journal model', function () {
         refs: []
       }
       const versionDoc = validVersionDoc(someJournalId)
-      const updatedMetaDoc = PoiMeta.update(journalDoc, versionDoc)
+      const updatedMetaDoc = Journal.update(journalDoc, versionDoc)
       updatedMetaDoc.current.should.equal(versionDoc)
       done()
     })
