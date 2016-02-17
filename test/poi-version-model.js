@@ -7,7 +7,7 @@ const it = global.it // for lint
 const describe = global.describe // for lint
 
 const PoiVersion = __.require('models', 'poi_version')
-const someMetaId = 'caa653ce22d3213f54338dd45300041c'
+const someJournalId = 'caa653ce22d3213f54338dd45300041c'
 
 describe('poi version model', function () {
   describe('create', function () {
@@ -17,8 +17,8 @@ describe('poi version model', function () {
     })
 
     const correct_doc = {
-      meta: someMetaId,
-      geojson: {
+      journal: someJournalId,
+      data: {
         type: 'Feature',
         geometry: {
           type: 'Point',
@@ -42,7 +42,7 @@ describe('poi version model', function () {
     })
     it('should throw if the geojson is not correct', function (done) {
       var doc = _.cloneDeep(correct_doc)
-      doc.geojson.geometry.coordinates = null
+      doc.data.geometry.coordinates = null
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
       try {
@@ -55,7 +55,7 @@ describe('poi version model', function () {
     })
     it('should throw if latitude is out of bounds', function (done) {
       var doc = _.cloneDeep(correct_doc)
-      doc.geojson.geometry.coordinates[0] = -200
+      doc.data.geometry.coordinates[0] = -200
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
       try {
@@ -68,7 +68,7 @@ describe('poi version model', function () {
     })
     it('should throw if longitude is out of bounds', function (done) {
       var doc = _.cloneDeep(correct_doc)
-      doc.geojson.geometry.coordinates[1] = 2000
+      doc.data.geometry.coordinates[1] = 2000
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
       try {
@@ -81,14 +81,14 @@ describe('poi version model', function () {
     })
     it('should throw if the doc has no name', function (done) {
       var doc = _.cloneDeep(correct_doc)
-      doc.geojson.properties = {}
+      doc.data.properties = {}
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
       done()
     })
     it('should throw if the name is empty', function (done) {
       var doc = _.cloneDeep(correct_doc)
-      doc.geojson.properties.name = ''
+      doc.data.properties.name = ''
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
       try {
@@ -99,16 +99,16 @@ describe('poi version model', function () {
       }
       done()
     })
-    it('should throw if the meta id is missing', function (done) {
+    it('should throw if the journal id is missing', function (done) {
       var doc = _.cloneDeep(correct_doc)
-      doc.meta = {}
+      doc.journal = {}
       const create = function () { PoiVersion.create(doc) }
       create.should.throw()
       try {
         create()
       } catch (err) {
         console.log(err)
-        err.message.should.equal('missing meta id')
+        err.message.should.equal('missing journal id')
       }
       done()
     })

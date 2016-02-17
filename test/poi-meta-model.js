@@ -7,9 +7,9 @@ const it = global.it // for lint
 const describe = global.describe // for lint
 
 const PoiMeta = __.require('models', 'poi_meta')
-const someMetaId = 'caa653ce22d3213f54338dd45300041c'
+const someJournalId = 'caa653ce22d3213f54338dd45300041c'
 
-const validVersionDoc = function (metaId) {
+const validVersionDoc = function (journalId) {
   return {
     _id: 'abf653ce22d3213f54338dd45300041c',
     type: 'poi',
@@ -23,11 +23,11 @@ const validVersionDoc = function (metaId) {
     properties: {
       name: 'Transition House'
     },
-    meta: metaId
+    journal: journalId
   }
 }
 
-describe('poi meta model', function () {
+describe('journal model', function () {
   describe('create', function () {
     it('should be a function', function (done) {
       PoiMeta.create.should.be.a.Function()
@@ -38,8 +38,8 @@ describe('poi meta model', function () {
       PoiMeta.create().should.be.an.Object()
       done()
     })
-    it('should have type set to meta', function (done) {
-      PoiMeta.create().type.should.equal('meta')
+    it('should have type set to journal', function (done) {
+      PoiMeta.create().type.should.equal('journal')
       done()
     })
     it('should return an object with an array of refs', function (done) {
@@ -54,42 +54,42 @@ describe('poi meta model', function () {
       done()
     })
     it('should return an object', function (done) {
-      const metaDoc = {
-        _id: someMetaId,
+      const journalDoc = {
+        _id: someJournalId,
         refs: []
       }
-      const versionDoc = validVersionDoc(someMetaId)
-      PoiMeta.update(metaDoc, versionDoc).should.not.throw()
-      PoiMeta.update(metaDoc, versionDoc).should.be.an.Object()
+      const versionDoc = validVersionDoc(someJournalId)
+      PoiMeta.update(journalDoc, versionDoc).should.not.throw()
+      PoiMeta.update(journalDoc, versionDoc).should.be.an.Object()
       done()
     })
     it('should return an object with one more ref', function (done) {
-      const metaDoc = {
-        _id: someMetaId,
+      const journalDoc = {
+        _id: someJournalId,
         refs: []
       }
-      const versionDoc = validVersionDoc(someMetaId)
-      const updatedMetaDoc = PoiMeta.update(metaDoc, versionDoc)
+      const versionDoc = validVersionDoc(someJournalId)
+      const updatedMetaDoc = PoiMeta.update(journalDoc, versionDoc)
       updatedMetaDoc.refs.length.should.equal(1)
       done()
     })
     it('should return an object with refs ids only', function (done) {
-      const metaDoc = {
-        _id: someMetaId,
+      const journalDoc = {
+        _id: someJournalId,
         refs: []
       }
-      const versionDoc = validVersionDoc(someMetaId)
-      const updatedMetaDoc = PoiMeta.update(metaDoc, versionDoc)
+      const versionDoc = validVersionDoc(someJournalId)
+      const updatedMetaDoc = PoiMeta.update(journalDoc, versionDoc)
       _.isUuid(updatedMetaDoc.refs[0]).should.equal(true)
       done()
     })
     it('should return an object with current set to the versionDoc', function (done) {
-      const metaDoc = {
-        _id: someMetaId,
+      const journalDoc = {
+        _id: someJournalId,
         refs: []
       }
-      const versionDoc = validVersionDoc(someMetaId)
-      const updatedMetaDoc = PoiMeta.update(metaDoc, versionDoc)
+      const versionDoc = validVersionDoc(someJournalId)
+      const updatedMetaDoc = PoiMeta.update(journalDoc, versionDoc)
       updatedMetaDoc.current.should.equal(versionDoc)
       done()
     })
