@@ -1,13 +1,15 @@
 {
   "_id" : "UUID of geo.object of interest for external world",
   "_rev" : "~~~~",
-  "type" : "object",
+  "type" : "journal",
+  "class": "poi",
   "current" : {
     "copy" : "of all attributes of the current objects for indexing",
     "ref" : "UUID of current object",
     "deleted" : "true as value if deleted",
-    "meta" : { "author":"x","timestamp":123 },
-    "geojson" : {
+    "author":"x",
+    "timestamp":123,
+    "data" : {
       "type": "Feature",
       "geometry": {
         "type": "Point",
@@ -23,18 +25,8 @@
     }
   },
   "journal" : [
-    {
-      "id" : "db UUID of the specific version object (v1)",
-      "timestamp" : 12354354,
-      "author" : "Douglas Adams",
-      "description" : "this is the commit message"
-    },
-    {
-      "id" : "db UUID of the specific database (v2)",
-      "timestamp" : 1235435454353,
-      "author" : "Douglas Adams",
-      "description" : "this is the commit message"
-    }
+    "db UUID of the specific version object (v1)",
+    "db UUID of the specific database (v2)"
   ]
 }
 

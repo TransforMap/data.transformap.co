@@ -2,9 +2,9 @@
   "_id" : "UUID",
   "_rev" : "~~~",
   "type" : "version",
-  "ref" : "UUID of type=geo object",
+  "journal" : "UUID of type=journal object",
   "deleted" : "true as value if deleted",
-  "geojson" : {
+  "data" : {
     "type": "Feature",
     "geometry": {
       "type": "Point",
@@ -18,8 +18,7 @@
       "name:en": "Cinema fsk"
     }
   },
-  "meta" : {
-    "author" : "Douglas Adamns",
-    "timestamp": 214143242
-  }
+  "author" : "Douglas Adamns",
+  "timestamp": 214143242,
+  "description" : "this is the commit message"
 }
