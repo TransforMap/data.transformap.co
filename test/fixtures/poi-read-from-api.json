@@ -1,7 +1,7 @@
 {
   "id": "3f99cbbccb02d48b595c369a150027ec",
   "type": "poi",
-  "geojson" : {
+  "data" : {
     "type": "Feature",
     "geometry": {
       "type": "Point",
@@ -32,9 +32,8 @@
       "osm-tag": "amenity=cinema"
     }
   },
-  "meta" : {
-    "userid":"3f99cbbccb02d48b595c369a1500242c",
-    "timestamp":"2014-11-06T21:48:24Z",
-    "copyright": "This data is from transformap.co. It is made available via CC-0"
-  }
+  "author":"3f99cbbccb02d48b595c369a1500242c",
+  "timestamp":"2014-11-06T21:48:24Z",
+  "copyright": "This data is from transformap.co. It is made available via CC-0",
+  "version": 1
 }

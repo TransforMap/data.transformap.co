@@ -3,7 +3,7 @@ const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const error_ = __.require('lib', 'error')
 const db = __.require('lib', 'db/db')('poi', 'poi')
-const PoiMeta = __.require('models', 'poi_meta')
+const Journal = __.require('models', 'journal')
 const PoiVersion = __.require('models', 'poi_version')
 const versions_ = require('./versions')
 
@@ -13,17 +13,17 @@ const poi_ = {
       .then(_.Log('poi byId'))
   },
   create: function (doc) {
-    // first create a meta document
-    return db.post(PoiMeta.create())
-      .then(_.Log('meta post res'))
+    // first create a journal document
+    return db.post(Journal.create('poi'))
+      .then(_.Log('journal post res'))
       // then create a first version document
       .then(function (res) {
-        const metaId = res.id
-        return versions_.create(metaId, doc)
-          // then update the meta document to reference the first version
+        const journalId = res.id
+        return versions_.create(journalId, doc)
+          // then update the journal document to reference the first version
           .then(function (firstVersionDoc) {
-            return db.update(metaId, function (metaDoc) {
-              return PoiMeta.update(metaDoc, firstVersionDoc)
+            return db.update(journalId, function (journalDoc) {
+              return Journal.update(journalDoc, firstVersionDoc)
             })
           })
       })
@@ -32,7 +32,7 @@ const poi_ = {
   },
   currentVersionById: function (id) {
     // there is some magic happening in the currentVersionById view (see db/design_docs/poi.json):
-    // as the meta document emits the id of another document in the format {'_id': doc.current._id},
+    // as the journal document emits the id of another document in the format {'_id': doc.current._id},
     // using the parameter include_doc will not return the emitting document but the document with the id doc.current._id.
     // This is called Linked documents https://wiki.apache.org/couchdb/Introduction_to_CouchDB_views#Linked_documents
     return db.viewByKey('currentVersionById', id)

@@ -7,7 +7,7 @@
     "test": "mocha",
     "start": "node api.js",
     "watch": "supervisor -w api.js,server -- api.js",
-    "lint": "./node_modules/standard/bin/cmd.js api.js server/**/* test/*"
+    "lint": "./node_modules/standard/bin/cmd.js api.js server/**/*js test/*js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
   "dependencies": {
     "americano": "^0.4.3",
     "config": "^1.19.0",
+    "geojson-tools": "^0.2.1",
     "inv-loggers": "^3.1.1",
     "lodash": "^4.3.0",
     "nano-blue": "^0.3.0"

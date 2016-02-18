@@ -4,11 +4,15 @@ const _ = __.require('lib', 'utils')
 const error_ = __.require('lib', 'error')
 
 module.exports = {
-  create: function () {
-    return {
-      type: 'meta',
+  create: function (className) {
+    var journal = {
+      type: 'journal',
       refs: []
     }
+    if (className !== 'undefined') {
+      journal.class = className
+    }
+    return journal
   },
   update: function (metaDoc, newVersionDoc) {
     const versionId = newVersionDoc._id
