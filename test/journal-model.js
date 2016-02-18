@@ -13,17 +13,19 @@ const validVersionDoc = function (journalId) {
   return {
     _id: 'abf653ce22d3213f54338dd45300041c',
     type: 'poi',
-    geometry: {
-      type: 'Point',
-      coordinates: [
-        15.144269,
-        47.050959
-      ]
-    },
-    properties: {
-      name: 'Transition House'
-    },
-    journal: journalId
+    journal: journalId,
+    data: {
+      geometry: {
+        type: 'Point',
+        coordinates: [
+          15.144269,
+          47.050959
+        ]
+      },
+      properties: {
+        name: 'Transition House'
+      }
+    }
   }
 }
 
@@ -91,7 +93,7 @@ describe('journal model', function () {
       const versionDoc = validVersionDoc(someJournalId)
       const updatedMetaDoc = Journal.update(journalDoc, versionDoc)
       const a = JSON.stringify(updatedMetaDoc.current)
-      const b = JSON.stringify(versionDoc)
+      const b = JSON.stringify(versionDoc.data)
       a.should.equal(b)
       done()
     })

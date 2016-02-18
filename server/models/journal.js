@@ -14,13 +14,13 @@ module.exports = {
     }
     return journal
   },
-  update: function (metaDoc, newVersionDoc) {
+  update: function (journalDoc, newVersionDoc) {
     const versionId = newVersionDoc._id
     if (!_.isUuid(versionId)) {
       throw error_.new('expected version id to be a Couchdb uuid', 500, arguments)
     }
-    metaDoc.refs.push(versionId)
-    metaDoc.current = _.omit(newVersionDoc, 'meta')
-    return metaDoc
+    journalDoc.refs.push(versionId)
+    journalDoc.current = newVersionDoc.data
+    return journalDoc
   }
 }

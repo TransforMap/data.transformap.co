@@ -44,16 +44,13 @@ const PoiVersion = {
     return doc
   },
   parseCurrentVersion: function (versionDoc) {
-    const journalId = versionDoc.journal
-    versionDoc = _.omit(versionDoc, privateAttributes)
+    // keeping only the data and not the version metadata
+    const data = versionDoc.data
     // faking to return the journal document id
     // while it's just the last version
-    versionDoc._id = journalId
-    return versionDoc
+    data._id = versionDoc.journal
+    return data
   }
 }
-
-// attributes that should not be returned to the end user
-const privateAttributes = ['type', 'journal', '_id', '_rev']
 
 module.exports = PoiVersion
