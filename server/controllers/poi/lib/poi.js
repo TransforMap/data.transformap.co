@@ -11,7 +11,7 @@ const promises_ = __.require('lib', 'promises')
 const poi_ = {
   byId: function (id) {
     return db.viewByKey('byId', id)
-      .then(_.Log('poi byId'))
+    .then(_.Log('poi byId'))
   },
   create: function (data) {
     // first make sure we have valid data
@@ -49,14 +49,14 @@ const poi_ = {
     // using the parameter include_doc will not return the emitting document but the document with the id doc.current._id.
     // This is called Linked documents https://wiki.apache.org/couchdb/Introduction_to_CouchDB_views#Linked_documents
     return db.viewByKey('currentVersionById', id)
-      .then(_.Log('currentVersionById'))
-      .then(function (doc) {
-        if (doc == null) {
-          throw error_.new('missing doc', 404, id)
-        }
-        return doc
-      })
-      .then(PoiVersion.parseCurrentVersion)
+    .then(_.Log('currentVersionById'))
+    .then(function (doc) {
+      if (doc == null) {
+        throw error_.new('missing doc', 404, id)
+      }
+      return doc
+    })
+    .then(PoiVersion.parseCurrentVersion)
   }
 }
 

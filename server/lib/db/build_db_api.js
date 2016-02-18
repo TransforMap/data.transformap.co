@@ -15,11 +15,11 @@ module.exports = function (db, designName) {
 
   const get = function (id) {
     return db.get(id)
-      .then(parseNanoResponse)
+    .then(parseNanoResponse)
   }
   const insert = function (doc) {
     return db.insert(doc)
-      .then(parseNanoResponse)
+    .then(parseNanoResponse)
   }
 
   return {
@@ -28,20 +28,21 @@ module.exports = function (db, designName) {
     // returns with the udpated _id and _rev
     postAndReturn: function (doc) {
       return insert(doc)
-        .then((res) => get(res.id))
+      .then(_.property('id'))
+      .then(get)
     },
     update: function (id, updateFn) {
       return get(id)
-        .then(updateFn)
-        .then(insert)
-        .then(_.Log('update'))
-        // TODO: catch insert errors to retry once
-        // to address possible conflicts
+      .then(updateFn)
+      .then(insert)
+      .then(_.Log('update'))
+      // TODO: catch insert errors to retry once
+      // to address possible conflicts
     },
     viewByKey: function (viewName, key) {
       return viewByKeys(viewName, [key])
-        .then(parseFirst)
-        .then(_.Log('viewByKey'))
+      .then(parseFirst)
+      .then(_.Log('viewByKey'))
     },
     viewByKeys: viewByKeys
   }
