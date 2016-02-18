@@ -1,11 +1,15 @@
 const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
+
+const it = global.it // for lint
+const describe = global.describe // for lint
+require('should')
+
 const breq = require('bluereq')
-const get = url => breq.get(url).then(_.property('body'))
+const get = (url) => breq.get(url).then(_.property('body'))
 const post = (url, body) => breq.post(url, body).then(_.property('body'))
 const poiNewDoc = require('../fixtures/poi-new-to-create-for-api')
-const should = require('should')
 const endpoint = CONFIG.server.url() + '/poi'
 
 console.log('url', endpoint)
@@ -36,7 +40,7 @@ describe('/poi', function () {
   describe('GET id', function () {
     it('should should return the same ', function (done) {
       post(endpoint, poiNewDoc)
-      .then(body => {console.log('fetching id: ' + body.id); return body})
+      .then((body) => { console.log('fetching id: ' + body.id); return body })
       .then(function (body1) {
         get(`${endpoint}/${body1.id}`)
         .then(function (body2) {
@@ -48,10 +52,8 @@ describe('/poi', function () {
           console.log('return value has a valid UUID')
           body2._id.should.equal(body1.id)
           console.log('return value\'s UUID is the same as requested')
-          b = JSON.stringify(poiNewDoc)
-          a = JSON.stringify(body2.data)
-          //console.log(a)
-          //console.log(b)
+          const b = JSON.stringify(poiNewDoc)
+          const a = JSON.stringify(body2.data)
           a.should.equal(b)
           console.log('returned data is the same as posted')
           body2.author.should.be.a.String()

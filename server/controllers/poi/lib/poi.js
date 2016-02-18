@@ -13,7 +13,7 @@ const poi_ = {
     return db.viewByKey('byId', id)
       .then(_.Log('poi byId'))
   },
-  create: function (data){
+  create: function (data) {
     // first make sure we have valid data
     // we don't want to create a journal or anything if the data isn't valid
     try {
@@ -51,7 +51,7 @@ const poi_ = {
     return db.viewByKey('currentVersionById', id)
       .then(_.Log('currentVersionById'))
       .then(function (doc) {
-        if(doc == null) {
+        if (doc == null) {
           throw error_.new('missing doc', 404, id)
         }
         return doc

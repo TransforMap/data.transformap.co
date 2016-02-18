@@ -6,9 +6,10 @@ const geojson = require('geojson-tools')
 
 const PoiVersion = {
   validateData: function (data) {
-    const geojson_testresult = geojson.isGeoJSON(data, true)
-    if (geojson_testresult !== true) {
-      throw error_.complete(geojson_testresult, 400, data)
+    const geojsonTestResult = geojson.isGeoJSON(data, true)
+    // if the test fails, returns an error object
+    if (geojsonTestResult !== true) {
+      throw error_.complete(geojsonTestResult, 400, data)
     }
     const lat = data.geometry.coordinates[0]
     const lon = data.geometry.coordinates[1]
@@ -18,7 +19,7 @@ const PoiVersion = {
     if (lon < -180 || lon > 360) {
       throw error_.new('coordinate lon out of range', 400, data)
     }
-    if (data.properties.name == null || data.properties.name === '') {
+    if (!_.isNonEmptyString(data.properties.name)) {
       throw error_.new('missing name', 400, data)
     }
     return data
