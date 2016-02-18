@@ -16,7 +16,15 @@ These terms are considered as guidelines. Follow them according to your understa
 ## Miscellaneous
 
 Use the test suite! Run "npm test" after your changes.
+If you have a local CouchDB running, also run the integration tests: 
+  start API with: "npm start"
+  in another terminal: "npm run integration"
+If some of the tests timeout on slow machines on the first run, just rerun them - they will be much faster on subsequent runs after everything is in memcache.
+
+
 Before commiting, run "npm run lint" to get warnings about your coding style.
+
+if you update do a new version, and it throws an Error like: Cannot find module '$newmodule', don't forget to run "npm install"
 
 ## file responsibilities
 
@@ -39,6 +47,8 @@ add a new POI:
 read a POI:
   curl http://localhost:8726/poi/3f99cbbccb02d48b595c369a150027ec
 
+this is also done automatically in the integration test
+
 ## database model for POIs
 
 there are two kinds of objects in our poi database:
@@ -47,3 +57,15 @@ there are two kinds of objects in our poi database:
   * it is of "type:" "objects"
   * it holds the history of the objects in the array "journal". the current object is deep-copied into the object "current" for indexing.
 2. for each version of the POI, an independent, full object type=version is stored. it is linked from the journal.
+
+## Git workflow for core contributors
+
+We keep an 'the master is always stable' workflow. So for each feature/bugfix, create a feature branch, send a pull request. At least two contributers should review and merge each pull request.
+
+git checkout master #base your new branch on master
+git checkout -b "name-your-branch"
+codecodecode
+git commit
+git push -u origin "name-your-branch"
+// from now on you can just "git push
+when you're ready, go to github to your branch, and do a pull request.
