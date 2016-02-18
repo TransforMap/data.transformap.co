@@ -1,18 +1,22 @@
 module.exports = {
   universalPath: require('./universal_path'),
   server: {
-    protocol: 'http',
-    host: '0.0.0.0',
+    scheme: 'http',
+    host: '127.0.0.1',
     port: 5000,
     url: function () {
-      return `${this.protocol}://${this.host}:${this.port}`
+      return `${this.scheme}://${this.host}:${this.port}`
     }
   },
-  db: {
-    protocol: 'http',
-    host: 'geocouch',
+  store: {
+    scheme: 'http',
+    host: '127.0.0.1',
     port: 5984,
     username: '',
-    password: ''
+    password: '',
+    // May be a code smell due to @maxlath, also above, as ENV config changes could overwrite
+    url: function () {
+      return `${this.scheme}://${this.username}:${this.password}@${this.host}:${this.port}`
+    }
   }
 }

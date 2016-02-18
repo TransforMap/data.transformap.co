@@ -1,7 +1,8 @@
 {
   "name": "transformap-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Here you find a Node.js daemon to serve the public TransforMap web service.",
+  "readme": "Please consult README.md",
   "main": "daemon.js",
   "scripts": {
     "test": "mocha tests",

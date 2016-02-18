@@ -2,9 +2,9 @@ const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const americano = require('americano')
-const initDatabases = __.require('db', 'init')
+const initStores = __.require('store', 'init')
 
-initDatabases()
+initStores()
 .then(function () {
   americano.start(CONFIG.server, function (err, app, server) {
     if (err) {

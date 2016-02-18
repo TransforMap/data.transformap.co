@@ -1,40 +1,40 @@
 const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
-const dbsList = require('./dbs_list')
-const nano = __.require('lib', 'db/nano')
+const storeList = require('./store_list')
+const nano = __.require('lib', 'store/nano')
 const promises_ = __.require('lib', 'promises')
 const fs = __.require('lib', 'fs')
-// const buildDbApi = __.require('lib', 'db/build_db_api')
+// const buildStoreApi = __.require('lib', 'store/build_store_api')
 
 module.exports = function () {
-  // init all dbs
-  return promises_.all(dbsList.map(initDb))
-    .catch(_.ErrorRethrow('db init err'))
+  // init all storess
+  return promises_.all(storeList.map(initStore))
+    .catch(_.ErrorRethrow('store init err'))
 }
 
-const initDb = function (dbData) {
-  _.log(dbData, 'initDb')
-  const name = dbData.name
-  const designDocs = dbData.designDocs
-  // const db = buildDbApi(nano.use(name))
-  const db = nano.use(name)
-  return ensureDbExistance(name, db)
-    .then(syncDesignDocs.bind(null, db, designDocs))
+const initStore = function (storeData) {
+  _.log(storeData, 'initStore')
+  const name = storeData.name
+  const designDocs = storeData.designDocs
+  // const store = buildStoreApi(nano.use(name))
+  const store = nano.use(name)
+  return ensureStoreExistance(name, store)
+    .then(syncDesignDocs.bind(null, store, designDocs))
 }
 
-const ensureDbExistance = function (dbName, db) {
-  return db.info()
-    .then((res) => _.success(`${dbName} database: exist`))
-    .catch(Create(dbName))
-    .catch(_.ErrorRethrow('ensureDbExistance'))
+const ensureStoreExistance = function (storeName, store) {
+  return store.info()
+    .then((res) => _.success(`${storeName} database: exist`))
+    .catch(Create(storeName))
+    .catch(_.ErrorRethrow('ensureStoreExistance'))
 }
 
-const Create = function (dbName) {
+const Create = function (storeName) {
   return function (err) {
     if (err.statusCode === 404) {
-      return nano.db.create(dbName)
-        .then(_.Log(`${dbName} database: created`))
+      return nano.store.create(storeName)
+        .then(_.Log(`${storeName} database: created`))
     } else {
       throw err
     }
@@ -43,16 +43,16 @@ const Create = function (dbName) {
 
 // this verifies that the database design documents are up-to-date
 // with the design docs files
-const syncDesignDocs = function (db, designDocs) {
-  return promises_.all(designDocs.map(syncDesignDoc.bind(null, db)))
+const syncDesignDocs = function (store, designDocs) {
+  return promises_.all(designDocs.map(syncDesignDoc.bind(null, store)))
 }
 
-const syncDesignDoc = function (db, designDocName) {
+const syncDesignDoc = function (store, designDocName) {
   const designDocId = `_design/${designDocName}`
   return getDesignDocFile(designDocName)
     .then(function (designDocFile) {
-      return getCurrentDesignDoc(db, designDocId)
-        .then(updateDesignDoc.bind(null, db, designDocId, designDocFile))
+      return getCurrentDesignDoc(store, designDocId)
+        .then(updateDesignDoc.bind(null, store, designDocId, designDocFile))
     })
 }
 
@@ -79,8 +79,8 @@ const getDesignDocFile = function (designDocName) {
     })
 }
 
-const getCurrentDesignDoc = function (db, designDocId) {
-  return db.get(designDocId)
+const getCurrentDesignDoc = function (store, designDocId) {
+  return store.get(designDocId)
     .spread(function (body, header) {
       return body
     })
@@ -95,7 +95,7 @@ const getCurrentDesignDoc = function (db, designDocId) {
     })
 }
 
-const updateDesignDoc = function (db, designDocId, designDocFile, currentDesignDoc) {
+const updateDesignDoc = function (store, designDocId, designDocFile, currentDesignDoc) {
   const rev = currentDesignDoc && currentDesignDoc._rev
   // delete the rev to be able to compare object
   delete currentDesignDoc._rev
@@ -108,7 +108,7 @@ const updateDesignDoc = function (db, designDocId, designDocFile, currentDesignD
     _.info(designDocId, 'updating design doc')
     const update = JSON.parse(designDocFile)
     update._rev = rev
-    return db.insert(update)
+    return store.insert(update)
       .spread(function (body) {
         _.success(designDocId, 'design doc updated')
       })

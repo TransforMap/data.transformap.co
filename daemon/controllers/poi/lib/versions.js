@@ -1,6 +1,6 @@
 const CONFIG = require('config')
 const __ = CONFIG.universalPath
-const db = __.require('lib', 'db/db')('poi', 'versions')
+const store = __.require('lib', 'store/store')('poi', 'versions')
 const PoiVersion = __.require('models', 'poi_version')
 
 module.exports = {
@@ -10,6 +10,6 @@ module.exports = {
       journal: journalId,
       data: doc
     }
-    return db.postAndReturn(PoiVersion.create(outer))
+    return store.postAndReturn(PoiVersion.create(outer))
   }
 }

@@ -2,9 +2,9 @@ const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 
-module.exports = function (db, designName) {
+module.exports = function (store, designName) {
   const viewByKeys = function (viewName, keys) {
-    return db.view(designName, viewName, {
+    return store.view(designName, viewName, {
       keys: keys,
       include_docs: true
     })
@@ -14,11 +14,11 @@ module.exports = function (db, designName) {
   }
 
   const get = function (id) {
-    return db.get(id)
+    return store.get(id)
       .then(parseNanoResponse)
   }
   const insert = function (doc) {
-    return db.insert(doc)
+    return store.insert(doc)
       .then(parseNanoResponse)
   }
 

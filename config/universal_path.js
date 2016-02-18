@@ -5,7 +5,7 @@ const paths = {
   controllers: 'daemon/controllers',
   lib: 'daemon/lib',
   models: 'daemon/models',
-  db: 'store',
+  store: 'store',
   designDocs: 'store/design_docs'
 }
 
