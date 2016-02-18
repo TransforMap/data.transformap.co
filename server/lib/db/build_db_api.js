@@ -28,7 +28,7 @@ module.exports = function (db, designName) {
     // returns with the udpated _id and _rev
     postAndReturn: function (doc) {
       return insert(doc)
-        .then((res) => get(res.id))
+        .then(res => get(res.id))
     },
     update: function (id, updateFn) {
       return get(id)
