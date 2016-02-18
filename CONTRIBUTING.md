@@ -16,7 +16,15 @@ These terms are considered as guidelines. Follow them according to your understa
 ## Miscellaneous
 
 Use the test suite! Run "npm test" after your changes.
+If you have a local CouchDB running, also run the integration tests: 
+  start API with: "npm start"
+  in another terminal: "npm run integration"
+If some of the tests timeout on slow machines on the first run, just rerun them - they will be much faster on subsequent runs after everything is in memcache.
+
+
 Before commiting, run "npm run lint" to get warnings about your coding style.
+
+if you update do a new version, and it throws an Error like: Cannot find module '$newmodule', don't forget to run "npm install"
 
 ## file responsibilities
 
