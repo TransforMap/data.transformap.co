@@ -1,6 +1,7 @@
 const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
+const error_ = __.require('lib', 'error')
 const db = __.require('lib', 'db/db')('poi', 'poi')
 const PoiMeta = __.require('models', 'poi_meta')
 const PoiVersion = __.require('models', 'poi_version')
@@ -36,6 +37,12 @@ const poi_ = {
     // This is called Linked documents https://wiki.apache.org/couchdb/Introduction_to_CouchDB_views#Linked_documents
     return db.viewByKey('currentVersionById', id)
       .then(_.Log('currentVersionById'))
+      .then(function (doc) {
+        if(doc == null) {
+          throw error_.new('missing doc', 404, id)
+        }
+        return doc
+      })
       .then(PoiVersion.parseCurrentVersion)
   }
 }
