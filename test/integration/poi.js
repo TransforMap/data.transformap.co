@@ -17,19 +17,34 @@ describe('/poi', function () {
       .then(function (body) {
         body.ok.should.equal(true)
         _.isUuid(body.id).should.equal(true)
+        console.log(body)
         done()
       })
     })
   })
   describe('GET id', function () {
-    it('should be a function', function (done) {
+    it('should should return the same ', function (done) {
       post(endpoint, poiNewDoc)
-      .then(body => get(`${endpoint}/${body.id}`))
-      .then(function (body) {
-        body.should.be.an.Object()
-        body.data.should.be.an.Object()
-        _.isUuid(body._id).should.equal(true)
-        done()
+      .then(body => {console.log('fetching id: ' + body.id); return body})
+      .then(function (body1) {
+        get(`${endpoint}/${body1.id}`)
+        .then(function (body2) {
+          body2.should.be.an.Object()
+          console.log('return value is an object')
+          body2.data.should.be.an.Object()
+          console.log('return value has an object member "data"')
+          _.isUuid(body2._id).should.equal(true)
+          console.log('return value has a valid UUID')
+          body2._id.should.equal(body1.id)
+          console.log('return value\'s UUID is the same as requested')
+          b = JSON.stringify(poiNewDoc)
+          a = JSON.stringify(body2.data)
+          //console.log(a)
+          //console.log(b)
+          a.should.equal(b) 
+          console.log('returned data is the same as posted')
+          done()
+        })
       })
     })
   })
