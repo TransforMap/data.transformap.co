@@ -23,7 +23,7 @@ describe('/poi', function () {
     })
   })
   describe('GET id', function () {
-    it('should should return the same ', function (done) {
+    it('should return the same object via GET that is pushed previously via POST', function (done) {
       post(endpoint, poiNewDoc)
       .then(body => {console.log('fetching id: ' + body.id); return body})
       .then(function (body1) {
