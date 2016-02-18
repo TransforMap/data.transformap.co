@@ -5,11 +5,13 @@ const PoiVersion = __.require('models', 'poi_version')
 
 module.exports = {
   create: function (journalId, doc) {
-    // keeping a reference to the journal document
-    const outer = {
+    // wrapping the document version in a larger document
+    // to add version metadata
+    const wrapper = {
+      // keeping a reference to the journal document
       journal: journalId,
       data: doc
     }
-    return db.postAndReturn(PoiVersion.create(outer))
+    return db.postAndReturn(PoiVersion.create(wrapper))
   }
 }
