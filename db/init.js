@@ -107,7 +107,7 @@ const updateDesignDoc = function (db, designDocId, designDocFile, currentDesignD
   } else {
     _.info(designDocId, 'updating design doc')
     const update = JSON.parse(designDocFile)
-    update.rev = rev
+    update._rev = rev
     return db.insert(update)
       .spread(function (body) {
         _.success(designDocId, 'design doc updated')
