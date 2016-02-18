@@ -2,13 +2,13 @@
   "name": "transformap-api",
   "version": "1.0.0",
   "description": "",
-  "main": "api.js",
+  "main": "daemon.js",
   "scripts": {
-    "test": "mocha",
-    "integration": "mocha test/integration",
-    "start": "node api.js",
-    "watch": "supervisor -w api.js,server -- api.js",
-    "lint": "./node_modules/standard/bin/cmd.js api.js server/**/*js test/*js"
+    "test": "mocha tests",
+    "integration": "mocha tests/integration",
+    "start": "node daemon.js",
+    "watch": "supervisor -w daemon.js,daemon -- daemon.js",
+    "lint": "./node_modules/standard/bin/cmd.js daemon.js daemon/**/* tests/*"
   },
   "repository": {
     "type": "git",

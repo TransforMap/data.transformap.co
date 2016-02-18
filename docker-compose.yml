@@ -1,0 +1,8 @@
+web:
+    image: almereyda/transformap-api
+    expose: 5000
+    links:
+      - geocouch:geocouch
+geocouch:
+    image: almereyda/geocouch
+    expose: 5984

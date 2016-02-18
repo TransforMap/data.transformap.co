@@ -1,12 +1,12 @@
 const root = process.cwd() + '/'
 
 const paths = {
-  root: '',
-  controllers: 'server/controllers',
-  lib: 'server/lib',
-  models: 'server/models',
-  db: 'db',
-  designDocs: 'db/design_docs'
+  root: 'src',
+  controllers: 'daemon/controllers',
+  lib: 'daemon/lib',
+  models: 'daemon/models',
+  db: 'store',
+  designDocs: 'store/design_docs'
 }
 
 const path = function (folder, name) {

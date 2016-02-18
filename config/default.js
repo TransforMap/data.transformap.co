@@ -3,16 +3,16 @@ module.exports = {
   server: {
     protocol: 'http',
     host: '0.0.0.0',
-    port: 8726,
+    port: 5000,
     url: function () {
       return `${this.protocol}://${this.host}:${this.port}`
     }
   },
   db: {
     protocol: 'http',
-    host: 'localhost',
+    host: 'geocouch',
     port: 5984,
-    username: 'your username',
-    password: 'your password'
+    username: '',
+    password: ''
   }
 }
