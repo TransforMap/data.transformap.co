@@ -21,6 +21,17 @@ describe('/poi', function () {
         done()
       })
     })
+    it('should return a 400 on invalid doc', function (done) {
+      const invalidNewDoc = {
+        so: 'much',
+        invalid: true
+      }
+      breq.post(endpoint, invalidNewDoc)
+      .then(function (res) {
+        res.statusCode.should.equal(400)
+        done()
+      })
+    })
   })
   describe('GET id', function () {
     it('should should return the same ', function (done) {
@@ -41,7 +52,7 @@ describe('/poi', function () {
           a = JSON.stringify(body2.data)
           //console.log(a)
           //console.log(b)
-          a.should.equal(b) 
+          a.should.equal(b)
           console.log('returned data is the same as posted')
           body2.author.should.be.a.String()
           console.log('object has author')
