@@ -90,7 +90,9 @@ describe('journal model', function () {
       }
       const versionDoc = validVersionDoc(someJournalId)
       const updatedMetaDoc = Journal.update(journalDoc, versionDoc)
-      updatedMetaDoc.current.should.equal(versionDoc)
+      const a = JSON.stringify(updatedMetaDoc.current)
+      const b = JSON.stringify(versionDoc)
+      a.should.equal(b)
       done()
     })
   })
