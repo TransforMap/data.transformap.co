@@ -12,7 +12,6 @@ const post = (url, body) => breq.post(url, body).then(_.property('body'))
 const poiNewDoc = require('../fixtures/poi-new-to-create-for-api')
 const endpoint = CONFIG.server.url() + '/poi'
 
-
 describe('/poi', function () {
   describe('POST doc', function () {
     it('should return the doc with journal id', function (done) {
@@ -36,7 +35,7 @@ describe('/poi', function () {
     })
   })
   describe('GET id', function () {
-    it('should get the right document', function (done) {
+    it('should return the same object via GET that is pushed previously via POST', function (done) {
       post(endpoint, poiNewDoc)
       .then(function (body1) {
         get(`${endpoint}/${body1.id}`)
