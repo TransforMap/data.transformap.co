@@ -1,51 +1,47 @@
-const C = require('config')
-const __ = C.universalPath
+const CONFIG = require('config')
+const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const breq = require('bluereq')
 const uuid = require('uuid')
 
-const wrap = function (el) {
-  return [ "\x27", "\x22", el, "\x22", "\x27" ].join("")
-}
+const wrap = (el) => `\x27\x22${el}\x22\x27`
 
-const provide_password = function (el) {
-  if (el.length === 0) {
-    _.log(el, 'No Admin password set. Generating.')
+const providePassword = function (str) {
+  if (str.length === 0) {
+    _.log(str, 'No Admin password set. Generating.')
     return uuid.v4()
   } else {
-    return el
+    return str
   }
 }
 
-const username = C.get('store.username')
-const password = provide_password(C.get('store.password'))
+const username = CONFIG.get('store.username')
+const password = providePassword(CONFIG.get('store.password'))
+const scheme = CONFIG.get('store.scheme')
+const host = CONFIG.get('store.host')
+const port = CONFIG.get('store.port')
 
-var c = {
-  prefix: [ C.get('store.scheme'), "://"].join(""),
-  location: [ C.get('store.host'),":", C.get('store.port')].join(""),
-  credentials: [ username, ":", password].join("")
+var urlConfig = {
+  prefix: `${scheme}://`,
+  location: `${host}:${port}`,
+  credentials: `${username}:${password}`
 }
 
-const adm_path = "/_config/admins/"
-const base_url = [ c.prefix, c.location].join("")
-const full_url = [ c.prefix, c.credentials, "@", c.location].join("")
-const test_url = [ base_url, adm_path].join("")
-const user_url = [ base_url, adm_path, username].join("")
+const admPath = '/_config/admins/'
+const baseUrl = `${urlConfig.prefix}${urlConfig.location}`
+const fullUrl = `${urlConfig.prefix}${urlConfig.credentials}@${urlConfig.location}`
+const testUrl = `${baseUrl}${admPath}`
+const userUrl = `${baseUrl}${admPath}${username}`
 
-breq.get(test_url)
-.then(function(res){
-  if (Object.keys(res.body).length === 0) {
-    breq.put({url: user_url, body: password})
-      .then(function(res){
-        _.log(["COUCHDB_URL=", full_url].join(""), 'Admin user created.')
-      })
-      .catch(function(res){
-        _.log(err, 'Admin setup failed.')
-      })
-  } else {
-    _.log(C.store, "Admins exist.")
+breq.get(testUrl)
+.then(function (res) {
+  if (Object.keys(res.body).length !== 0) {
+    _.log(CONFIG.store, 'Admins exist.')
+    return
   }
+  return breq.put({url: userUrl, body: wrap(password)})
+  .then((res) => `COUCHDB_URL=${fullUrl}`)
+  .then(_.Log('Admin user created.'))
+  .catch(_.ErrorRethrow('Admin setup failed.'))
 })
-.catch(function(err){
-  _.log(err, 'No connection to CouchDB possible.');
-});
+.catch(_.ErrorRethrow('No connection to CouchDB possible.'))

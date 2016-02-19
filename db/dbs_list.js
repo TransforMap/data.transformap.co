@@ -1,6 +1,6 @@
 // key: database
 // values: design documents
-module.exports = [
+module.exports = [
   {
     name: 'things',
     designDocs: ['journals', 'versions']
