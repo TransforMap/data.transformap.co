@@ -62,44 +62,35 @@ module.exports = function (contextName, model) {
       .then(Version.parseCurrentVersion)
     },
     update: function (data, journalId) {
-      try { // same as in create
+      // same as in create
+      try {
         model.validateData(data)
       } catch (err) {
         return promises_.reject(err)
       }
 
       if (!_.isUuid(journalId)) {
-        return promises_.reject('err in update, path not an uuid: \'' + journalId + '\'')
+        return promises_.reject(`err in update, path not an uuid: '${journalId}'`)
       }
-      console.log('update with id: ' + journalId)
+      _.log(journalId, 'update with id')
 
       return db.viewByKey('byId', [contextName, journalId])
-      // DB will return just 'undefined' of nothing found
+      // DB will return just 'undefined' if nothing is found
       .then(function (doc) {
-        if (typeof (doc) !== 'object') {
-          console.log('doc: ' + doc)
+        if (!_.isPlainObject(doc)) {
           throw error_.new('no object with this id in db', 404, doc)
         }
-        return doc
+
+        // check okay, create version object
+        return versions_.create(journalId, data)
       })
-      .then(_.Log('byId'))
-      // check if supplied UUID is a version object of context place
-      .then(function (doc) {
-        if (doc.type !== 'journal' || doc.context !== 'place') {
-          console.log(doc)
-          throw error_.new('uuid not of existing journal context=place', 404, doc)
-        }
-        return doc
-      })
-      // check okay, create version object
-      .then(() => versions_.create(journalId, data))
       // insert version object into journal
       .then(function (newVersionObject) {
         return db.update(journalId, function (journalDoc) {
           return Journal.update(journalDoc, newVersionObject)
         })
       })
-      .then(_.Log('retval of insert'))
+      .then(_.Log('return value of insert'))
       .catch(_.ErrorRethrow('db insert error'))
     }
   }
