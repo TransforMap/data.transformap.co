@@ -4,23 +4,24 @@ const _ = __.require('lib', 'utils')
 const error_ = __.require('lib', 'error')
 
 module.exports = {
-  create: function (className) {
+  create: function (context) {
     var journal = {
       type: 'journal',
-      refs: []
+      versions: []
     }
-    if (className !== 'undefined') {
-      journal.class = className
+    if (!context) {
+      throw error_.new('expected a context', 500, arguments)
     }
+    journal.context = context
     return journal
   },
-  update: function (metaDoc, newVersionDoc) {
+  update: function (journalDoc, newVersionDoc) {
     const versionId = newVersionDoc._id
     if (!_.isUuid(versionId)) {
       throw error_.new('expected version id to be a Couchdb uuid', 500, arguments)
     }
-    metaDoc.refs.push(versionId)
-    metaDoc.current = _.omit(newVersionDoc, 'meta')
-    return metaDoc
+    journalDoc.versions.push(versionId)
+    journalDoc.current = newVersionDoc.data
+    return journalDoc
   }
 }

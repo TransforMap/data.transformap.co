@@ -1,0 +1,12 @@
+{
+   "_id": "_design/journals",
+   "language": "javascript",
+   "views": {
+       "byId": {
+           "map": "function(doc) {\n  if (doc.type === 'journal') {\n    emit([doc.context, doc._id], null)\n  }\n}"
+       },
+       "currentVersionById": {
+           "map": "function(doc) {\n  if (doc.type === 'journal') {\n    var lastVersionId = doc.versions.slice(-1)[0]\n    emit([doc.context, doc._id], {'_id': lastVersionId})\n  }\n}"
+       }
+   }
+}
