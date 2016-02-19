@@ -5,6 +5,7 @@ const dbsList = require('./dbs_list')
 const nano = __.require('lib', 'db/nano')
 const promises_ = __.require('lib', 'promises')
 const fs = __.require('lib', 'fs')
+const putSecurityDoc = require('./lib/put_security_doc')
 
 module.exports = function () {
   // init all dbs
@@ -18,7 +19,12 @@ const initDb = function (dbData) {
   const designDocs = dbData.designDocs
   const db = nano.use(name)
   return ensureDbExistance(name, db)
-  .then(syncDesignDocs.bind(null, db, designDocs))
+  .then(function () {
+    return promises_.all([
+      syncDesignDocs(db, designDocs),
+      putSecurityDoc(db, name)
+    ])
+  })
 }
 
 const ensureDbExistance = function (dbName, db) {
