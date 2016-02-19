@@ -30,6 +30,7 @@ module.exports = function (contextName, model) {
       // then knowning that the data is valid, create a journal document
       return db.post(Journal.create(contextName))
       .then(_.Log('journal post res'))
+      // extracting the journalId
       .then(_.property('id'))
       // then create a first version document and update the journal
       .then(_.partial(updateJournal, data))
