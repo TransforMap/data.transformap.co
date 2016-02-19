@@ -33,7 +33,6 @@ describe('poi model', function () {
       const data = _.cloneDeep(correctData)
       const validateData = function () { return Place.validateData(data) }
       validateData.should.not.throw()
-      validateData().should.be.an.Object()
       done()
     })
     it('should throw if the geojson is not correct', function (done) {

@@ -22,6 +22,5 @@ module.exports = {
     if (!_.isNonEmptyString(data.properties.name)) {
       throw error_.new('missing name', 400, data)
     }
-    return data
   }
 }
