@@ -18,7 +18,6 @@ const PoiVersion = {
 
     doc.type = 'version'
     doc.timestamp = _.now()
-    doc.version = 1
 
     _.log(doc, 'poi creation formatted doc')
     return doc

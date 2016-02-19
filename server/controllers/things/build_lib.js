@@ -6,6 +6,7 @@ const Journal = require('./models/commons/journal')
 const Version = require('./models/commons/version')
 const versions_ = require('./lib/versions')
 const promises_ = __.require('lib', 'promises')
+const error_ = __.require('lib', 'error')
 
 module.exports = function (contextName, model) {
   return {
@@ -59,6 +60,47 @@ module.exports = function (contextName, model) {
         return doc
       })
       .then(Version.parseCurrentVersion)
+    },
+    update: function (data, journalId) {
+      try { // same as in create
+        model.validateData(data)
+      } catch (err) {
+        return promises_.reject(err)
+      }
+
+      if (!_.isUuid(journalId)) {
+        return promises_.reject('err in update, path not an uuid: \'' + journalId + '\'')
+      }
+      console.log('update with id: ' + journalId)
+
+      return db.viewByKey('byId', [contextName, journalId])
+      // DB will return just 'undefined' of nothing found
+      .then(function (doc) {
+        if (typeof (doc) !== 'object') {
+          console.log('doc: ' + doc)
+          throw error_.new('no object with this id in db', 404, doc)
+        }
+        return doc
+      })
+      .then(_.Log('byId'))
+      // check if supplied UUID is a version object of context place
+      .then(function (doc) {
+        if (doc.type !== 'journal' || doc.context !== 'place') {
+          console.log(doc)
+          throw error_.new('uuid not of existing journal context=place', 404, doc)
+        }
+        return doc
+      })
+      // check okay, create version object
+      .then(() => versions_.create(journalId, data))
+      // insert version object into journal
+      .then(function (newVersionObject) {
+        return db.update(journalId, function (journalDoc) {
+          return Journal.update(journalDoc, newVersionObject)
+        })
+      })
+      .then(_.Log('retval of insert'))
+      .catch(_.ErrorRethrow('db insert error'))
     }
   }
 }
