@@ -9,6 +9,7 @@ require('should')
 const breq = require('bluereq')
 const get = (url) => breq.get(url).then(_.property('body'))
 const post = (url, body) => breq.post(url, body).then(_.property('body'))
+const put = (url, body) => breq.put(url, body).then(_.property('body'))
 const poiNewDoc = require('../fixtures/poi-new-to-create-for-api')
 const endpoint = CONFIG.server.url() + '/poi'
 
@@ -56,17 +57,42 @@ describe('/poi', function () {
     })
   })
   describe('UPDATE id', function () {
+    it('should accept a correct object for update', function (done) {
+      post(endpoint, poiNewDoc)
+      .then(function (body1) {
+        poiNewDoc.properties.name += " - Version 2"
+        put(`${endpoint}/${body1.id}`, poiNewDoc)
+        .then(function(retVal) {
+          retVal.ok.should.equal(true)
+          done()
+        })
+      })
+    })
+    it('should return a 400 on invalid doc', function (done) {
+      const invalidNewDoc = {
+        this: 'is',
+        no: 'geojson'
+      }
+      post(endpoint, poiNewDoc)
+      .then(function (body1) {
+        breq.put(`${endpoint}/${body1.id}`, invalidNewDoc)
+        .then(function (res) {
+          res.statusCode.should.equal(400)
+          done()
+        })
+      })
+    })
     it('should return the new version after update', function (done) {
       post(endpoint, poiNewDoc)
       .then(function (body1) {
         poiNewDoc.properties.name += " - Version 2"
-        post(`${endpoint}/${body1.id}`, poiNewDoc)
+        put(`${endpoint}/${body1.id}`, poiNewDoc)
 //        .then(_.Log('retval of update command'))
         .then(function (body2) {
           get(`${endpoint}/${body2.id}`)
 //          .then(_.Log('retval of get command'))
           .then(function (body3) {
-            console.log(body3)
+//            console.log(body3)
             body3.should.be.an.Object()
             body3.properties.should.be.an.Object()
             _.isUuid(body3._id).should.equal(true)
@@ -81,8 +107,5 @@ describe('/poi', function () {
         })
       })
     })
-  /*  it('should only accept the type of objects the journal is', function (done) {
-
-    }) */
   })
 })

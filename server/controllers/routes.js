@@ -12,7 +12,7 @@ module.exports = {
   },
   'poi/:id': {
     get: poi.read,
-    post: poi.update
+    put: poi.update
   },
   'event': {
     post: (a) => null // TODO: event.create - create event

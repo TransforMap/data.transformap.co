@@ -32,7 +32,7 @@ const poi_ = {
     // then create a first version document
     .then(function (res) {
       const journalId = res.id
-      return versions_.create(journalId, data, 1)
+      return versions_.create(journalId, data)
       // then update the journal document to reference the first version
       .then(function (firstVersionDoc) {
         return db.update(journalId, function (journalDoc) {
@@ -64,10 +64,21 @@ const poi_ = {
     } catch (err) {
       return promises_.reject(err)
     }
-    // check if supplied UUID is a version object of type poi
+
+    if (!_.isUuid(journalId)) {
+      return promises_.reject('err in update, path not an uuid: \'' + journalId + '\'')
+    }
+
     return db.viewByKey('byId', journalId)
-    .catch(_.ErrorRethrow('db error, no object with this id'))
+    // DB will return just 'undefined' of nothing found
+    .then(function (doc) {
+      if (typeof (doc) !== 'object') {
+        throw error_.new('no object with this id in db', 404, doc)
+      }
+      return doc
+    })
     .then(_.Log('byId'))
+    // check if supplied UUID is a version object of type poi
     .then(function (doc) {
       if (doc.type !== 'journal' || doc.class !== 'poi') {
         console.log(doc)
@@ -76,7 +87,7 @@ const poi_ = {
       return doc
     })
     // check okay, create version object
-    .then((doc) => versions_.create(journalId, data, doc.current.version + 1))
+    .then(() => versions_.create(journalId, data))
     // insert version object into journal
     .then(function (newVersionObject) {
       return db.update(journalId, function (journalDoc) {
