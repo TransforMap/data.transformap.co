@@ -33,13 +33,7 @@ module.exports = function (contextName, model) {
       // then create a first version document
       .then(function (res) {
         const journalId = res.id
-        return versions_.create(journalId, data)
-        // then update the journal document to reference the first version
-        .then(function (firstVersionDoc) {
-          return db.update(journalId, function (journalDoc) {
-            return Journal.update(journalDoc, firstVersionDoc)
-          })
-        })
+        return updateJournal(journalId, data)
       })
       .then(_.Log('thing created'))
       .catch(_.ErrorRethrow('thing creation err'))
@@ -81,17 +75,22 @@ module.exports = function (contextName, model) {
           throw error_.new('no object with this id in db', 404, doc)
         }
 
-        // check okay, create version object
-        return versions_.create(journalId, data)
+        // insert version object into journal
+        return updateJournal(journalId, data)
       })
-      // insert version object into journal
-      .then(function (newVersionObject) {
-        return db.update(journalId, function (journalDoc) {
-          return Journal.update(journalDoc, newVersionObject)
-        })
-      })
-      .then(_.Log('return value of insert'))
-      .catch(_.ErrorRethrow('db insert error'))
+      .then(_.Log('thing updated'))
+      .catch(_.ErrorRethrow('thing update err'))
     }
   }
+}
+
+const updateJournal = function (journalId, data) {
+  // create a new version associated to this journal
+  return versions_.create(journalId, data)
+  // then update the journal document to reference the new version
+  .then(function (newVersionObject) {
+    return db.update(journalId, function (journalDoc) {
+      return Journal.update(journalDoc, newVersionObject)
+    })
+  })
 }
