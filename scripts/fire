@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+
+# script to be fired in case of fire
+# to address the concerns that araised from having pre-commit hooks
+# blocking an emergency backup commit in case of fire
+
+# force pre-commit hooks desactivation
+rm /home/maxlath/transformap/.githooks/pre-commit/*
+# create emergency branch
+git check-out -b fireBackup
+# commit every known files
+git commit -a -m 'FIRE FIRE FIRE, SAVE THE CODE AND THE MATE FIRST!'
+
+# see http://stackoverflow.com/a/15105237/3324977 for additional ()
+remotes=($(git remote -v | grep push | awk '{print $1}'))
+for r in $remotes
+do
+  git push $r fireBackup
+  echo 'FIRE!!!!!!!!'
+done
