@@ -24,7 +24,7 @@ const PoiVersion = {
     }
     return data
   },
-  create: function (doc) {
+  create: function (doc, version) {
     _.log(doc, 'poi creation doc')
 
     if (!_.isUuid(doc.journal)) {
@@ -38,7 +38,7 @@ const PoiVersion = {
 
     doc.type = 'version'
     doc.timestamp = _.now()
-    doc.version = 1
+    doc.version = version
 
     _.log(doc, 'poi creation formatted doc')
     return doc

@@ -45,7 +45,7 @@ describe('/poi', function () {
           body2.properties.should.be.an.Object()
           _.isUuid(body2._id).should.equal(true)
           body2._id.should.equal(body1.id)
-          // coying the id to make comparission simpler
+          // copying the id to make comparison simpler
           poiNewDoc._id = body2._id
           const b = JSON.stringify(poiNewDoc)
           const a = JSON.stringify(body2)
@@ -54,5 +54,35 @@ describe('/poi', function () {
         })
       })
     })
+  })
+  describe('UPDATE id', function () {
+    it('should return the new version after update', function (done) {
+      post(endpoint, poiNewDoc)
+      .then(function (body1) {
+        poiNewDoc.properties.name += " - Version 2"
+        post(`${endpoint}/${body1.id}`, poiNewDoc)
+//        .then(_.Log('retval of update command'))
+        .then(function (body2) {
+          get(`${endpoint}/${body2.id}`)
+//          .then(_.Log('retval of get command'))
+          .then(function (body3) {
+            console.log(body3)
+            body3.should.be.an.Object()
+            body3.properties.should.be.an.Object()
+            _.isUuid(body3._id).should.equal(true)
+            body3._id.should.equal(body2.id)
+            // copying the id to make comparison simpler
+            poiNewDoc._id = body3._id
+            const b = JSON.stringify(poiNewDoc)
+            const a = JSON.stringify(body3)
+            a.should.equal(b)
+            done()
+          })
+        })
+      })
+    })
+  /*  it('should only accept the type of objects the journal is', function (done) {
+
+    }) */
   })
 })

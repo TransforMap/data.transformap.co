@@ -8,9 +8,17 @@ module.exports = {
     }
   },
   'poi': {
-    post: poi.post
+    post: poi.create
   },
   'poi/:id': {
-    get: poi.get
+    get: poi.read,
+    post: poi.update
+  },
+  'event': {
+    post: (a) => null // TODO: event.create - create event
+  },
+  'event/:id': {
+    get: (a) => null, // TODO read single event
+    post: (a) => null // TODO update event
   }
 }
