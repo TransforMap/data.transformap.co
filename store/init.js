@@ -16,9 +16,12 @@ module.exports = function () {
 const initStore = function (storeData) {
   _.log(storeData, 'initStore')
   const name = storeData.name
+  _.log(name, 'name')
   const designDocs = storeData.designDocs
+  _.log(designDocs, 'designDocs')
   // const store = buildStoreApi(nano.use(name))
   const store = nano.use(name)
+  _.log(store, 'Store')
   return ensureStoreExistance(name, store)
     .then(syncDesignDocs.bind(null, store, designDocs))
 }
@@ -121,7 +124,7 @@ const updateDesignDoc = function (store, designDocId, designDocFile, currentDesi
 const emtpyDesignDoc = function (designDocName) {
   return {
     _id: `_design/${designDocName}`,
-    language: "javascript"
+    language: 'javascript'
   }
 }
 

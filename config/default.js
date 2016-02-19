@@ -12,7 +12,7 @@ module.exports = {
     scheme: 'http',
     host: '127.0.0.1',
     port: 5984,
-    username: '',
+    username: 'transformap',
     password: '',
     // May be a code smell due to @maxlath, also above, as ENV config changes could overwrite
     url: function () {

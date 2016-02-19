@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
@@ -6,7 +7,7 @@ const initStores = __.require('store', 'init')
 
 initStores()
 .then(function () {
-  americano.start(CONFIG.server, function (err, app, server) {
+  americano.start(CONFIG.get('server'), function (err, app, server) {
     if (err) {
       _.error(err, 'init err')
     } else {
