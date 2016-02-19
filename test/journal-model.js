@@ -6,13 +6,13 @@ require('should')
 const it = global.it // for lint
 const describe = global.describe // for lint
 
-const Journal = __.require('models', 'journal')
+const Journal = __.require('controllers', 'things/models/commons/journal')
 const someJournalId = 'caa653ce22d3213f54338dd45300041c'
 
 const validVersionDoc = function (journalId) {
   return {
     _id: 'abf653ce22d3213f54338dd45300041c',
-    type: 'poi',
+    context: 'place',
     journal: journalId,
     data: {
       geometry: {
@@ -31,21 +31,27 @@ const validVersionDoc = function (journalId) {
 
 describe('journal model', function () {
   describe('create', function () {
+    const createFn = () => Journal.create('place')
+
     it('should be a function', function (done) {
       Journal.create.should.be.a.Function()
       done()
     })
     it('should return an object', function (done) {
-      Journal.create.should.not.throw()
-      Journal.create().should.be.an.Object()
+      createFn.should.not.throw()
+      createFn().should.be.an.Object()
       done()
     })
     it('should have type set to journal', function (done) {
-      Journal.create().type.should.equal('journal')
+      createFn().type.should.equal('journal')
       done()
     })
-    it('should return an object with an array of refs', function (done) {
-      Journal.create().refs.should.be.an.Array()
+    it('should return an object with an array of versions', function (done) {
+      createFn().versions.should.be.an.Array()
+      done()
+    })
+    it('should return an object with the passed context', function (done) {
+      createFn().context.should.equal('place')
       done()
     })
   })
@@ -58,7 +64,7 @@ describe('journal model', function () {
     it('should return an object', function (done) {
       const journalDoc = {
         _id: someJournalId,
-        refs: []
+        versions: []
       }
       const versionDoc = validVersionDoc(someJournalId)
       Journal.update(journalDoc, versionDoc).should.not.throw()
@@ -68,27 +74,27 @@ describe('journal model', function () {
     it('should return an object with one more ref', function (done) {
       const journalDoc = {
         _id: someJournalId,
-        refs: []
+        versions: []
       }
       const versionDoc = validVersionDoc(someJournalId)
       const updatedMetaDoc = Journal.update(journalDoc, versionDoc)
-      updatedMetaDoc.refs.length.should.equal(1)
+      updatedMetaDoc.versions.length.should.equal(1)
       done()
     })
-    it('should return an object with refs ids only', function (done) {
+    it('should return an object with versions ids only', function (done) {
       const journalDoc = {
         _id: someJournalId,
-        refs: []
+        versions: []
       }
       const versionDoc = validVersionDoc(someJournalId)
       const updatedMetaDoc = Journal.update(journalDoc, versionDoc)
-      _.isUuid(updatedMetaDoc.refs[0]).should.equal(true)
+      _.isUuid(updatedMetaDoc.versions[0]).should.equal(true)
       done()
     })
     it('should return an object with current set to the versionDoc', function (done) {
       const journalDoc = {
         _id: someJournalId,
-        refs: []
+        versions: []
       }
       const versionDoc = validVersionDoc(someJournalId)
       const updatedMetaDoc = Journal.update(journalDoc, versionDoc)

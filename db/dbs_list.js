@@ -2,7 +2,7 @@
 // values: design documents
 module.exports = [
   {
-    name: 'poi',
-    designDocs: ['poi', 'versions']
+    name: 'things',
+    designDocs: ['journals', 'versions']
   }
 ]
