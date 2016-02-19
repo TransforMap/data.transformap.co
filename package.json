@@ -1,11 +1,13 @@
 {
   "name": "transformap-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Here you find a Node.js daemon to serve the public TransforMap web service.",
+  "readme": "Please consult README.md",
   "main": "api.js",
   "scripts": {
     "test": "mocha",
     "integration": "mocha test/integration",
+    "prestart": "node ./db/prestart.js",
     "start": "node api.js",
     "watch": "supervisor -w api.js,server -- api.js",
     "lint": "./node_modules/standard/bin/cmd.js api.js server/**/*js test/*js",
@@ -29,7 +31,8 @@
     "geojson-tools": "^0.2.1",
     "inv-loggers": "^3.1.1",
     "lodash": "^4.3.0",
-    "nano-blue": "^0.3.0"
+    "nano-blue": "^0.3.0",
+    "uuid": "^2.0.1"
   },
   "devDependencies": {
     "git-hooks": "^1.0.2",
