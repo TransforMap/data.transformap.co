@@ -30,7 +30,7 @@ const handler = function (res, err) {
     }
     res.status(statusCode).json({status: message})
   } else {
-    _.error(err, `request Error: ${err.message}`)
+    _.error([err, err.data], `request Error: ${err.message}`)
     res.status(statusCode || 500).json({status: message})
   }
 }
