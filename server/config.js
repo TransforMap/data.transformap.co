@@ -1,5 +1,6 @@
 const americano = require('americano')
 const cors = require('./middlewares/cors')
+const passport = require('./middlewares/passport')
 
 module.exports = {
   common: [
@@ -9,7 +10,9 @@ module.exports = {
       dumpExceptions: true,
       showStack: true
     }),
-    cors
+    cors,
+    passport.initialize,
+    passport.restrictedRoutes
   ],
   development: [
     americano.logger('dev')
