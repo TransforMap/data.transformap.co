@@ -5,7 +5,7 @@ const error_ = __.require('lib', 'error')
 
 const ThingVersion = {
   create: function (doc) {
-    _.log(doc, 'poi creation doc')
+    _.log(doc, 'model: thing creation doc')
 
     if (!_.isUuid(doc.journal)) {
       throw error_.new('missing journal id', 500, doc)
@@ -16,7 +16,7 @@ const ThingVersion = {
     doc.description = 'Have fun, and thanks for all the fish!'
     // TODO add license from user profile to doc.copyright
 
-    doc.type = 'version'
+    doc.context = 'version'
     doc.timestamp = _.now()
 
     _.log(doc, 'poi creation formatted doc')

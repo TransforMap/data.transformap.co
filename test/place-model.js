@@ -6,7 +6,7 @@ require('should')
 const it = global.it // for lint
 const describe = global.describe // for lint
 
-const Place = __.require('controllers', 'things/models/contexts/place')
+const Place = __.require('controllers', 'things/models/types/place')
 
 describe('place model', function () {
   describe('validateData', function () {

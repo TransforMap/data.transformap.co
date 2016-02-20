@@ -61,10 +61,10 @@ this is also done automatically in the integration test
 
 there are two kinds of objects in our poi database:
 
-1. a collective object (test/fixtures/databaseobject-view.json), which has the "public" UUID of this POI
-  * it is of "type:" "objects"
+1. a collective object (test/fixtures/database/journal.json), which has the "public" UUID of this POI
+  * it is of "type:" "$object", and context=version
   * it holds the history of the objects in the array "journal". the current object is deep-copied into the object "current" for indexing.
-2. for each version of the POI, an independent, full object type=version is stored. it is linked from the journal.
+2. for each version of the POI, an independent, full object context=version is stored. it is linked from the journal.
 
 ## Git workflow for core contributors
 

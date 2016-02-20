@@ -8,11 +8,11 @@ const versions_ = require('./lib/versions')
 const promises_ = __.require('lib', 'promises')
 const error_ = __.require('lib', 'error')
 
-module.exports = function (contextName, model) {
+module.exports = function (typeName, model) {
   return {
     byId: function (id) {
-      return db.viewByKey('byId', [contextName, id])
-      .then(_.Log(`${contextName} byId`))
+      return db.viewByKey('byId', [typeName, id])
+      .then(_.Log(`${typeName} byId`))
     },
     create: function (data) {
       // first make sure we have valid data
@@ -28,7 +28,7 @@ module.exports = function (contextName, model) {
       }
 
       // then knowning that the data is valid, create a journal document
-      return db.post(Journal.create(contextName))
+      return db.post(Journal.create(typeName))
       .then(_.Log('journal post res'))
       // extracting the journalId
       .then(_.property('id'))
@@ -42,9 +42,9 @@ module.exports = function (contextName, model) {
       // as the journal document emits the id of another document in the format {'_id': lastVersionId},
       // using the parameter include_doc will not return the emitting document but the document with the id doc.current._id.
       // This is called Linked documents https://wiki.apache.org/couchdb/Introduction_to_CouchDB_views#Linked_documents
-      // The complex key [contextName, id] allows to make sure we don't
-      // return a document that doesn't belong to the required context
-      return db.viewByKey('currentVersionById', [contextName, id])
+      // The complex key [typeName, id] allows to make sure we don't
+      // return a document that doesn't belong to the required type
+      return db.viewByKey('currentVersionById', [typeName, id])
       .then(_.Log('currentVersionById'))
       .then(reject404)
       .then(Version.parseCurrentVersion)
@@ -60,7 +60,7 @@ module.exports = function (contextName, model) {
       if (!_.isUuid(journalId)) {
         return promises_.reject(`err in update, path not an uuid: '${journalId}'`)
       }
-      return db.viewByKey('byId', [contextName, journalId])
+      return db.viewByKey('byId', [typeName, journalId])
       // DB will return just 'undefined' if nothing is found
       .then(reject404)
       // Insert version object into journal.
@@ -77,7 +77,7 @@ module.exports = function (contextName, model) {
       }
       _.log(journalId, 'update with id')
 
-      return db.viewByKey('byId', [contextName, journalId])
+      return db.viewByKey('byId', [typeName, journalId])
       // DB will return just 'undefined' if nothing is found
       .then(function (journal) {
         _.log(journal, 'delete: got journal')

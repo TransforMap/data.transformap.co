@@ -1,9 +1,13 @@
 {
   "_id" : "UUID of geo.object of interest for external world",
   "_rev" : "~~~~",
-  "type" : "journal",
-  "class": "poi",
-  "current" : {
+  "context" : "journal",
+  "type": "poi",
+  "status": {
+    "deleted": true,
+    "deleted_is": "only present if it is marked as deleted. status maybe missing otherwise"
+  },
+  "data" : {
     "copy" : "of all attributes of the current objects for indexing",
     "ref" : "UUID of current object",
     "deleted" : "true as value if deleted",

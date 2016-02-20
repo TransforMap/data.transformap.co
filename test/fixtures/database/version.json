@@ -6,6 +6,7 @@
   "status" : {
     "deleted" : "true as value if deleted"
   },
+  "type": "place",
   "data" : {
     "type": "Feature",
     "geometry": {

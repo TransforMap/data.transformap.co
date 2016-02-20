@@ -12,7 +12,8 @@ const someJournalId = 'caa653ce22d3213f54338dd45300041c'
 const validVersionDoc = function (journalId) {
   return {
     _id: 'abf653ce22d3213f54338dd45300041c',
-    context: 'place',
+    context: 'version',
+    type: 'place',
     journal: journalId,
     data: {
       geometry: {
@@ -42,16 +43,16 @@ describe('journal model', function () {
       createFn().should.be.an.Object()
       done()
     })
-    it('should have type set to journal', function (done) {
-      createFn().type.should.equal('journal')
+    it('should have context set to journal', function (done) {
+      createFn().context.should.equal('journal')
       done()
     })
     it('should return an object with an array of versions', function (done) {
       createFn().versions.should.be.an.Array()
       done()
     })
-    it('should return an object with the passed context', function (done) {
-      createFn().context.should.equal('place')
+    it('should return an object with the passed type', function (done) {
+      createFn().type.should.equal('place')
       done()
     })
   })
@@ -91,14 +92,14 @@ describe('journal model', function () {
       _.isUuid(updatedMetaDoc.versions[0]).should.equal(true)
       done()
     })
-    it('should return an object with current set to the versionDoc', function (done) {
+    it('should return an object with current data set to the versionDoc', function (done) {
       const journalDoc = {
         _id: someJournalId,
         versions: []
       }
       const versionDoc = validVersionDoc(someJournalId)
       const updatedMetaDoc = Journal.update(journalDoc, versionDoc)
-      const a = JSON.stringify(updatedMetaDoc.current)
+      const a = JSON.stringify(updatedMetaDoc.data)
       const b = JSON.stringify(versionDoc.data)
       a.should.equal(b)
       done()

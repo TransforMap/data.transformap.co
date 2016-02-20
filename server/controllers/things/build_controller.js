@@ -4,9 +4,9 @@ const _ = __.require('lib', 'utils')
 const error_ = __.require('lib', 'error')
 const buildLib = require('./build_lib')
 
-module.exports = function (contextName) {
-  const model = require(`./models/contexts/${contextName}`)
-  const lib = buildLib(contextName, model)
+module.exports = function (typeName) {
+  const model = require(`./models/types/${typeName}`)
+  const lib = buildLib(typeName, model)
 
   return {
     get: function (req, res) {
