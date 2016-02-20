@@ -92,6 +92,37 @@ module.exports = function (contextName, model) {
       })
       .then(_.Log('return value of insert'))
       .catch(_.ErrorRethrow('db insert error'))
+    },
+    delete: function (journalId) {
+      if (!_.isUuid(journalId)) {
+        return promises_.reject(`err in update, path not an uuid: '${journalId}'`)
+      }
+      _.log(journalId, 'update with id')
+
+      return db.viewByKey('byId', [contextName, journalId])
+      // DB will return just 'undefined' if nothing is found
+      .then(function (journal) {
+        _.log(journal, 'delete: got journal')
+        if (!_.isPlainObject(journal)) {
+          throw error_.new('no object with this id in db', 404, journal)
+        }
+        if (_.isPlainObject(journal.status) && journal.status.deleted === true) {
+          throw error_.new('already deleted', 208, journal) // "already reported", borrowed from WebDAV
+        }
+        if (!_.isPlainObject(journal.status)) {
+          journal['status'] = { deleted: true }
+        } else {
+          journal.status.deleted = true
+        }
+        return versions_.create(journalId, journal.data, journal.status)
+      })
+      // insert version object into journal
+      .then(function (newVersionObject) {
+        return db.update(journalId, function (journalDoc) {
+          return Journal.update(journalDoc, newVersionObject)
+        })
+      })
+      .then(_.Log('return value of insert'))
     }
   }
 }

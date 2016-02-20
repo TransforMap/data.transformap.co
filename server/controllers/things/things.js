@@ -36,7 +36,8 @@ const contextRoutes = function (contextName) {
   }
   routes[`${contextName}/:id`] = {
     get: controller.get,
-    put: controller.put
+    put: controller.put,
+    delete: controller.delete
   }
 
   return routes

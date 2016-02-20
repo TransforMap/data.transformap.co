@@ -22,6 +22,11 @@ module.exports = {
     }
     journalDoc.versions.push(versionId)
     journalDoc.current = newVersionDoc.data
+    if (newVersionDoc.status) {
+      journalDoc.status = newVersionDoc.status
+    } else //status not supplied, delete in journal
+      if (journalDoc.status)
+        delete journalDoc.status
     return journalDoc
   }
 }

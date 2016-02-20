@@ -8,7 +8,7 @@ const describe = global.describe // for lint
 
 const Place = __.require('controllers', 'things/models/contexts/place')
 
-describe('poi model', function () {
+describe('place model', function () {
   describe('validateData', function () {
     it('should be a function', function (done) {
       Place.validateData.should.be.a.Function()

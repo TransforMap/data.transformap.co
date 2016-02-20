@@ -42,10 +42,18 @@ lib takes the data returned by the model and POSTs it into the DB
 ## testing the API functions
 
 add a new POI:
-  curl http://localhost:8726/poi/ -d@test/fixtures/poi-new-to-create-for-api.json -H 'content-type: application/json'
+  curl http://localhost:5000/place/ -d@test/fixtures/place-new-to-create-for-api.json -H 'content-type: application/json'
 
 read a POI:
-  curl http://localhost:8726/poi/3f99cbbccb02d48b595c369a150027ec
+  curl http://localhost:5000/place/3f99cbbccb02d48b595c369a150027ec
+
+update a POI:
+  curl -X PUT http://localhost:5000/place/3f99cbbccb02d48b595c369a150027ec -d@test/fixtures/place-new-to-create-for-api.json -H 'content-type: application/json'
+
+mark a POI as deleted:
+  curl -X DELETE http://localhost:5000/place/3f99cbbccb02d48b595c369a150027ec
+
+To 'undelete' a poi, simply put a new version with the 'update' command there.
 
 this is also done automatically in the integration test
 

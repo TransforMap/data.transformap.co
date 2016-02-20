@@ -3,7 +3,7 @@ const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const error_ = __.require('lib', 'error')
 
-const PoiVersion = {
+const ThingVersion = {
   create: function (doc) {
     _.log(doc, 'poi creation doc')
 
@@ -32,4 +32,4 @@ const PoiVersion = {
   }
 }
 
-module.exports = PoiVersion
+module.exports = ThingVersion

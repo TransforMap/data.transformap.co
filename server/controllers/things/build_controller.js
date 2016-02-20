@@ -37,6 +37,18 @@ module.exports = function (contextName) {
       lib.update(req.body, id)
       .then(res.json.bind(res))
       .catch(error_.Handler(res))
+    },
+    delete: function (req, res) {
+      const id = req.params.id
+
+      if (!_.isUuid(id)) {
+        error_.bundle(res, 'invalid id', 400, id)
+        return
+      }
+
+      lib.delete(id)
+      .then(res.json.bind(res))
+      .catch(error_.Handler(res))
     }
   }
 }
