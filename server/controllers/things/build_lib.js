@@ -30,17 +30,10 @@ module.exports = function (contextName, model) {
       // then knowning that the data is valid, create a journal document
       return db.post(Journal.create(contextName))
       .then(_.Log('journal post res'))
-      // then create a first version document
-      .then(function (res) {
-        const journalId = res.id
-        return versions_.create(journalId, data)
-        // then update the journal document to reference the first version
-        .then(function (firstVersionDoc) {
-          return db.update(journalId, function (journalDoc) {
-            return Journal.update(journalDoc, firstVersionDoc)
-          })
-        })
-      })
+      // extracting the journalId
+      .then(_.property('id'))
+      // then create a first version document and update the journal
+      .then(_.partial(updateJournal, data))
       .then(_.Log('thing created'))
       .catch(_.ErrorRethrow('thing creation err'))
     },
@@ -53,12 +46,7 @@ module.exports = function (contextName, model) {
       // return a document that doesn't belong to the required context
       return db.viewByKey('currentVersionById', [contextName, id])
       .then(_.Log('currentVersionById'))
-      .then(function (doc) {
-        if (doc == null) {
-          throw error_.new('missing doc', 404, id)
-        }
-        return doc
-      })
+      .then(reject404)
       .then(Version.parseCurrentVersion)
     },
     update: function (data, journalId) {
@@ -72,26 +60,16 @@ module.exports = function (contextName, model) {
       if (!_.isUuid(journalId)) {
         return promises_.reject(`err in update, path not an uuid: '${journalId}'`)
       }
-      _.log(journalId, 'update with id')
-
       return db.viewByKey('byId', [contextName, journalId])
       // DB will return just 'undefined' if nothing is found
-      .then(function (doc) {
-        if (!_.isPlainObject(doc)) {
-          throw error_.new('no object with this id in db', 404, doc)
-        }
-
-        // check okay, create version object
-        return versions_.create(journalId, data)
-      })
-      // insert version object into journal
-      .then(function (newVersionObject) {
-        return db.update(journalId, function (journalDoc) {
-          return Journal.update(journalDoc, newVersionObject)
-        })
-      })
-      .then(_.Log('return value of insert'))
-      .catch(_.ErrorRethrow('db insert error'))
+      .then(reject404)
+      // Insert version object into journal.
+      // journalId and data are already available
+      // but we need to wait for the validation
+      // to execute updateJournal, thus the partial
+      .then(_.partial(updateJournal, data, journalId))
+      .then(_.Log('thing updated'))
+      .catch(_.ErrorRethrow('thing update err'))
     },
     delete: function (journalId) {
       if (!_.isUuid(journalId)) {
@@ -125,4 +103,22 @@ module.exports = function (contextName, model) {
       .then(_.Log('return value of insert'))
     }
   }
+}
+
+const reject404 = function (doc) {
+  if (!_.isPlainObject(doc)) {
+    throw error_.new('no object with this id in db', 404, doc)
+  }
+  return doc
+}
+
+const updateJournal = function (data, journalId) {
+  // create a new version associated to this journal
+  return versions_.create(journalId, data)
+  // then update the journal document to reference the new version
+  .then(function (newVersionObject) {
+    return db.update(journalId, function (journalDoc) {
+      return Journal.update(journalDoc, newVersionObject)
+    })
+  })
 }
