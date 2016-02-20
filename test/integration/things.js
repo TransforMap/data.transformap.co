@@ -10,6 +10,7 @@ const breq = require('bluereq')
 const get = (url) => breq.get(url).then(_.property('body'))
 const post = (url, body) => breq.post(url, body).then(_.property('body'))
 const put = (url, body) => breq.put(url, body).then(_.property('body'))
+const delete_ = (url) => breq.delete(url).then(_.property('body'))
 const endpoint = CONFIG.server.url() + '/place'
 const placeNewDoc = require('../fixtures/place-new-to-create-for-api')
 
@@ -105,6 +106,32 @@ describe('/place', function () {
             done()
           })
         })
+      })
+    })
+  })
+  describe('DELETE id', function () {
+    it('should add the deleted flag to supplied UUID', function (done) {
+      post(endpoint, placeNewDoc)
+      .then(function (body1) {
+        delete_(`${endpoint}/${body1.id}`)
+      })
+      .then(function (deleteAnswer) {
+        console.log(deleteAnswer)
+        deleteAnswer.ok.should.equal(true)
+        done()
+      })
+    })
+    it('should error if the UUID is already deleted', function (done) {
+      post(endpoint, placeNewDoc)
+      .then(function (body1) {
+        delete_(`${endpoint}/${body1.id}`)
+      })
+      .then(function (deleteAnswer) {
+    })
+    it('should return 404 if the UUID is not there', function (done) {
+      post(endpoint, placeNewDoc)
+      .then(function (body1) {
+        delete_(`${endpoint}/${body1.id}`)
       })
     })
   })
