@@ -1,5 +1,4 @@
-const logger = require('morgan')
-
+const americano = require('americano')
 const cors = function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
@@ -9,10 +8,15 @@ const cors = function (req, res, next) {
 
 module.exports = {
   common: [
-    require('body-parser').json(),
-    require('method-override')(),
-    require('errorhandler')({ dumpExceptions: true, showStack: true }),
-    cors
+    americano.bodyParser({limit: '50mb'}),
+    americano.methodOverride(),
+    americano.errorHandler({
+      dumpExceptions: true,
+      showStack: true
+    }),
+    cors,
+    passport.initialize,
+    passport.restrictedRoutes
   ],
   development: [
     logger('dev')
