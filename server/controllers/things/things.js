@@ -35,7 +35,8 @@ const contextRoutes = function (contextName) {
     post: controller.post
   }
   routes[`${contextName}/:id`] = {
-    get: controller.get
+    get: controller.get,
+    put: controller.put
   }
 
   return routes

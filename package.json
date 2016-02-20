@@ -10,7 +10,7 @@
     "prestart": "node ./db/prestart.js",
     "start": "node api.js",
     "watch": "supervisor -w api.js,server -- api.js",
-    "lint": "./node_modules/standard/bin/cmd.js api.js server/**/*js test/*js",
+    "lint": "./node_modules/standard/bin/cmd.js api.js server/**/*js test/**/*js db/**/*js",
     "fire-emergency-button": "./scripts/fire"
   },
   "repository": {

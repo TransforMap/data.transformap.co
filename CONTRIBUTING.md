@@ -16,7 +16,7 @@ These terms are considered as guidelines. Follow them according to your understa
 ## Miscellaneous
 
 Use the test suite! Run "npm test" after your changes.
-If you have a local CouchDB running, also run the integration tests: 
+If you have a local CouchDB running, also run the integration tests:
   start API with: "npm start"
   in another terminal: "npm run integration"
 If some of the tests timeout on slow machines on the first run, just rerun them - they will be much faster on subsequent runs after everything is in memcache.
@@ -69,3 +69,47 @@ git commit
 git push -u origin "name-your-branch"
 // from now on you can just "git push
 when you're ready, go to github to your branch, and do a pull request.
+
+## Coding style
+
+The code style should stay consistent throughtout the codebase. This is partially ensured by preventing any commit that doesn't pass the linter (see package.json scripts.lint), but it doesn't check for nearlly every conventions used in this codebase. Those additional conventions are documented here:
+
+### Case
+  * general rule: variables (including functions) should be camelCased
+  * exceptions: has we are not using classes, the convention of naming Classes/Constructor with a capital can be reused elsewhere
+    * Higher-order functions may be capitalized, especially when they are a [partial](https://medium.com/@thinkfunctional/currying-partial-application-f1365d5fad3f) of another function: `_.log` or `error_.handler` have their respective partial functions named `_.Log` and `error_.Handler` after this convention.
+    * Just like internal libs may have a `_` suffix (e.g `error_`) to avoid collisions, models are capitalize: e.g `Journal`, or `Version`
+
+### Indentation
+  * returning a promise shouldn't trigger an indentation for the chained actions:
+
+    ```javascript
+    // yes
+    return db.get(id)
+    .then(res.json.bind(res))
+    .catch(error_.Handler(res))
+    ```
+
+    ```javascript
+    // no
+    return db.get(id)
+      .then(res.json.bind(res))
+      .catch(error_.Handler(res))
+    ```
+
+  * but long chained variable creation should be indented for readibility:
+
+
+    ```javascript
+    // yes
+    const count = collection
+      .map(_.property('value'))
+      .reduce(sum, 0)
+    ```
+
+    ```javascript
+    // no
+    const count = collection
+    .map(_.property('value'))
+    .reduce(sum, 0)
+    ```

@@ -64,7 +64,7 @@ const getDesignDocFile = function (designDocName) {
         // initialize the design doc if none is found
         // return a stringify version to keep consistency
         // with what would the normal readFile
-        initDoc = JSON.stringify(emtpyDesignDoc(designDocName), null, 4)
+        const initDoc = JSON.stringify(emtpyDesignDoc(designDocName), null, 4)
         // creating the design doc file but not waiting for its creation
         fs.writeFile(designDocPath, initDoc)
         .then(function () {
@@ -100,7 +100,7 @@ const updateDesignDoc = function (db, designDocId, designDocFile, currentDesignD
   // delete the rev to be able to compare object
   delete currentDesignDoc._rev
   // designDocFile should be a stringified object
-  currentDesignDocStr = JSON.stringify(currentDesignDoc)
+  const currentDesignDocStr = JSON.stringify(currentDesignDoc)
   // comparison is made without spaces to avoid false negative
   if (removeSpaces(designDocFile) === removeSpaces(currentDesignDocStr)) {
     _.info(designDocId, 'design doc up-to-date')
@@ -121,7 +121,7 @@ const updateDesignDoc = function (db, designDocId, designDocFile, currentDesignD
 const emtpyDesignDoc = function (designDocName) {
   return {
     _id: `_design/${designDocName}`,
-    language: "javascript"
+    language: 'javascript'
   }
 }
 
