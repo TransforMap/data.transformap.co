@@ -6,10 +6,10 @@ const Version = require('../models/commons/version')
 
 module.exports = {
   create: function (journalId, data, status) {
-    console.log('lib/version: got journalId: ', journalId)
+/*    console.log('lib/version: got journalId: ', journalId)
     console.log('lib/version: got data: ', data)
     console.log('lib/version: got status: ', status)
-    _.log(`lib/version: got journalId '$(journalId)'`)
+    _.log(`lib/version: got journalId '$(journalId)'`) */
     // wrapping the data in a larger document
     // to add version metadata
     const wrapper = {

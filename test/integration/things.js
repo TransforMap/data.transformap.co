@@ -15,7 +15,7 @@ const endpoint = CONFIG.server.url() + '/place'
 const placeNewDoc = require('../fixtures/place-new-to-create-for-api')
 
 describe('/place', function () {
-/*  describe('POST doc', function () {
+  describe('POST doc', function () {
     it('should return the doc with journal id', function (done) {
       post(endpoint, placeNewDoc)
       .then(function (body) {
@@ -50,7 +50,7 @@ describe('/place', function () {
           placeNewDoc._id = body2._id
           const b = JSON.stringify(placeNewDoc)
           const a = JSON.stringify(body2)
-          if(a !== b) {
+          if (a !== b) {
             _.log('posted', a)
             _.log('returned', b)
           }
@@ -111,33 +111,32 @@ describe('/place', function () {
         })
       })
     })
-  }) */
+  })
   describe('DELETE id', function () {
     it('should add the deleted flag to supplied UUID', function (done) {
       post(endpoint, placeNewDoc)
       .then(function (body1) {
         delete_(`${endpoint}/${body1.id}`)
-        .then(_.Log('deleteAnswer'))
         .then(function (deleteAnswer) {
           deleteAnswer.ok.should.equal(true)
           get(`${endpoint}/${deleteAnswer.id}`)
-          .then(_.Log('get of deleted object'))
           .then(function (body2) {
-            body2.status.deleted.should.equal(true)
+            body2._deleted.should.equal(true)
             done()
           })
         })
       })
     })
-/*    it('should error if the UUID is already deleted', function (done) {
+    it('should return 208 if the UUID is already deleted', function (done) {
       post(endpoint, placeNewDoc)
       .then(function (body1) {
         delete_(`${endpoint}/${body1.id}`)
-        .then(breq.delete(`${endpoint}/${body1.id}`))
- //       .then(_.Log('answer of failed delete'))
-        .then(function (deleteAnswer) {
-          deleteAnswer.statusCode.should.equal(208) // "already reported", borrowed from WebDAV
-          done()
+        .then(function (deleteAnswer1) {
+          breq.delete(`${endpoint}/${deleteAnswer1.id}`)
+          .then(function (deleteAnswer2) {
+            deleteAnswer2.statusCode.should.equal(208) // "already reported", borrowed from WebDAV
+            done()
+          })
         })
       })
     })
@@ -148,8 +147,5 @@ describe('/place', function () {
         done()
       })
     })
-    it('should add status.deleted = true property on returned object on read call', function (done) {
-      done()
-    })*/
   })
 })
