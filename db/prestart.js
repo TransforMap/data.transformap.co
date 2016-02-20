@@ -4,7 +4,7 @@ const _ = __.require('lib', 'utils')
 const breq = require('bluereq')
 const uuid = require('uuid')
 
-const wrap = (el) => `\x27\x22${el}\x22\x27`
+const wrap = (el) => `"${el}"`
 
 const providePassword = function (str) {
   if (str.length === 0) {
@@ -39,7 +39,7 @@ breq.get(testUrl)
     _.log(CONFIG.store, 'Admins exist.')
     return
   }
-  return breq.put({url: userUrl, body: wrap(password)})
+  return breq.put({url: userUrl, body: wrap(password), headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
   .then((res) => `COUCHDB_URL=${fullUrl}`)
   .then(_.Log('Admin user created.'))
   .catch(_.ErrorRethrow('Admin setup failed.'))
