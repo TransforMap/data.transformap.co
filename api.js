@@ -8,5 +8,5 @@ const start = bluebird.promisify(americano.start)
 
 initDatabases()
 .then(() => start(CONFIG.server))
-.then((app, server) => _.success('server started!!!'))
+.then((app) => _.success('server started!!!'))
 .catch(_.Error('init err'))
