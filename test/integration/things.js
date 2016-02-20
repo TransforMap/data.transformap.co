@@ -114,24 +114,35 @@ describe('/place', function () {
       post(endpoint, placeNewDoc)
       .then(function (body1) {
         delete_(`${endpoint}/${body1.id}`)
-      })
-      .then(function (deleteAnswer) {
-        console.log(deleteAnswer)
-        deleteAnswer.ok.should.equal(true)
-        done()
+        .then(function (deleteAnswer) {
+          console.log(deleteAnswer)
+          deleteAnswer.ok.should.equal(true)
+          get(`${endpoint}/${body1.id}`)
+          .then(function (body2) {
+            body2.status.deleted.should.equal(true)
+            done()
+          })
+        })
       })
     })
     it('should error if the UUID is already deleted', function (done) {
       post(endpoint, placeNewDoc)
       .then(function (body1) {
         delete_(`${endpoint}/${body1.id}`)
+        .then(breq.delete(`${endpoint}/${body1.id}`))
+        .then(_.Log('answer of failed delete'))
+        .then(function (deleteAnswer) {
+          deleteAnswer.statusCode.should.equal(208) // "already reported", borrowed from WebDAV
+          done()
+        })
       })
-      .then(function (deleteAnswer) {
     })
     it('should return 404 if the UUID is not there', function (done) {
-      post(endpoint, placeNewDoc)
-      .then(function (body1) {
-        delete_(`${endpoint}/${body1.id}`)
+      breq.delete(`${endpoint}/3f99cbbccb02d48b595c369a00000000`)
+      .then(_.Log('answer of failed delete'))
+      .then(function (deleteAnswer) {
+        deleteAnswer.statusCode.should.equal(404)
+        done()
       })
     })
   })
