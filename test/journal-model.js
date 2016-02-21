@@ -9,7 +9,7 @@ const describe = global.describe // for lint
 const Journal = __.require('controllers', 'things/models/commons/journal')
 const someJournalId = 'caa653ce22d3213f54338dd45300041c'
 
-const validVersionDoc = function (journalId) {
+const createValidVersionDoc = function (journalId) {
   return {
     _id: 'abf653ce22d3213f54338dd45300041c',
     context: 'version',
@@ -67,7 +67,7 @@ describe('journal model', function () {
         _id: someJournalId,
         versions: []
       }
-      const versionDoc = validVersionDoc(someJournalId)
+      const versionDoc = createValidVersionDoc(someJournalId)
       Journal.update(journalDoc, versionDoc).should.not.throw()
       Journal.update(journalDoc, versionDoc).should.be.an.Object()
       done()
@@ -77,7 +77,7 @@ describe('journal model', function () {
         _id: someJournalId,
         versions: []
       }
-      const versionDoc = validVersionDoc(someJournalId)
+      const versionDoc = createValidVersionDoc(someJournalId)
       const updatedMetaDoc = Journal.update(journalDoc, versionDoc)
       updatedMetaDoc.versions.length.should.equal(1)
       done()
@@ -87,7 +87,7 @@ describe('journal model', function () {
         _id: someJournalId,
         versions: []
       }
-      const versionDoc = validVersionDoc(someJournalId)
+      const versionDoc = createValidVersionDoc(someJournalId)
       const updatedMetaDoc = Journal.update(journalDoc, versionDoc)
       _.isUuid(updatedMetaDoc.versions[0]).should.equal(true)
       done()
@@ -97,11 +97,34 @@ describe('journal model', function () {
         _id: someJournalId,
         versions: []
       }
-      const versionDoc = validVersionDoc(someJournalId)
+      const versionDoc = createValidVersionDoc(someJournalId)
       const updatedMetaDoc = Journal.update(journalDoc, versionDoc)
       const a = JSON.stringify(updatedMetaDoc.data)
       const b = JSON.stringify(versionDoc.data)
       a.should.equal(b)
+      done()
+    })
+    it('should delete the status:{} in the journal if none set in versionDoc', function (done) {
+      const journalDoc = {
+        _id: someJournalId,
+        status: { deleted: true },
+        versions: []
+      }
+      const versionDoc = createValidVersionDoc(someJournalId)
+      const updatedMetaDoc = Journal.update(journalDoc, versionDoc)
+      _.isPlainObject(updatedMetaDoc.status).should.equal(false)
+      done()
+    })
+    it('should copy the the status:{} into the journal from versionDoc', function (done) {
+      const journalDoc = {
+        _id: someJournalId,
+        versions: []
+      }
+      const status = { deleted: true, status2: 'blubb' }
+      var versionDoc = createValidVersionDoc(someJournalId)
+      versionDoc.status = status
+      const updatedMetaDoc = Journal.update(journalDoc, versionDoc)
+      JSON.stringify(updatedMetaDoc.status).should.equal(JSON.stringify(status))
       done()
     })
   })

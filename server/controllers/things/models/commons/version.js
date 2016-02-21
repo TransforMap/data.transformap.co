@@ -28,6 +28,7 @@ const ThingVersion = {
     // faking to return the journal document id
     // while it's just the last version
     data._id = versionDoc.journal
+
     if(versionDoc.status && versionDoc.status.deleted === true)
       data._deleted = true
     return data
