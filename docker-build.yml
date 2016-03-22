@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  web:
+    build: .
+    expose:
+      - "5000"
+    links:
+      - geocouch:geocouch
+    environment:
+      NODE_ENV: 'production'
+  geocouch:
+    image: almereyda/geocouch
+    expose:
+      - "5984"

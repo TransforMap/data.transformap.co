@@ -1,8 +1,13 @@
-web:
+version: '2'
+
+services:
+  web:
     image: almereyda/transformap-api
-    expose: 5000
+    expose:
+      - "5000"
     links:
       - geocouch:geocouch
-geocouch:
+  geocouch:
     image: almereyda/geocouch
-    expose: 5984
+    expose:
+      - "5984"
