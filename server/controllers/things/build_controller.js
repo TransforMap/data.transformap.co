@@ -13,13 +13,16 @@ module.exports = function (typeName) {
       const id = req.params.id
 
       if (!_.isUuid(id)) {
-        error_.bundle(res, 'invalid id', 400, id)
-        return
+        var query = (id == 'all') ? '' : id
+        lib.filter(query)
+        .then(_.Log('get with !uuid'))
+        .then(res.json.bind(res))
+        .catch(error_.Handler(res))
+      } else {
+        lib.currentVersionById(id)
+        .then(res.json.bind(res))
+        .catch(error_.Handler(res))
       }
-
-      lib.currentVersionById(id)
-      .then(res.json.bind(res))
-      .catch(error_.Handler(res))
     },
     post: function (req, res) {
       lib.create(req.body)

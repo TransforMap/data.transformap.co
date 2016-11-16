@@ -14,6 +14,12 @@ module.exports = function (typeName, model) {
       return db.viewByKey('byId', [typeName, id])
       .then(_.Log(`${typeName} byId`))
     },
+    filter: function(filter_string) {
+      if(filter_string == '') {
+        return db.viewAll('byId',typeName)
+        .then(_.Log(`${typeName} filter all`))
+      }
+    },
     create: function (data) {
       // first make sure we have valid data
       // we don't want to create a journal or anything if the data isn't valid
