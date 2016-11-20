@@ -17,6 +17,7 @@ module.exports = function (typeName, model) {
     filter: function(filter_string) {
       if(filter_string == '') {
         return db.viewAll('byId',typeName)
+        .then(convertArrayToFeatureCollection)
         .then(_.Log(`${typeName} filter all`))
       }
     },
@@ -127,4 +128,22 @@ const updateJournal = function (data, journalId) {
       return Journal.update(journalDoc, newVersionObject)
     })
   })
+}
+
+const convertArrayToFeatureCollection = function (data_array) {
+  var feature_collection = {
+    'type': 'FeatureCollection',
+    'source': 'https://data.transformap.co', // only temporarly here
+    'license': 'Public Domain',              // -||-
+    'features': []
+  }
+  data_array.forEach( item => {
+    var feature = item.data
+    if(!feature.properties)
+      feature.properties = {}
+    feature.properties._uri = 'https://data.transformap.co/' + item.type + '/' + item._id
+    // TODO feature.timestamp = item.timestamp
+    feature_collection.features.push(feature)
+  })
+  return feature_collection
 }
