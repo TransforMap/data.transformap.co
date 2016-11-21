@@ -16,7 +16,7 @@ module.exports = function (typeName, model) {
     },
     filter: function(filter_string) {
       const convertArrayToTypeFeatureCollection = function (data_array) {
-        return convertArrayToFeatureCollection(data_array,typeName)
+        return convertArrayToFeatureCollection(data_array,typeName,filter_string)
       }
       if(filter_string == '') {
         return db.viewByKeyRange('currentVersionById', [typeName, '0'], [typeName, 'z'])
@@ -149,12 +149,12 @@ const updateJournal = function (data, journalId) {
   })
 }
 
-const convertArrayToFeatureCollection = function (data_array, item_type) {
+const convertArrayToFeatureCollection = function (data_array, item_type, query_string) {
   const hostname = 'https://data.transformap.co'
   var feature_collection = {
     'type': 'FeatureCollection',
-    'source': hostname, // only temporarly here
-    'license': 'Public Domain',              // -||-
+    'source': hostname + '/' + item_type + '/' + query_string,
+    'license': 'Public Domain',              // only temporarly here
     'features': []
   }
   data_array.forEach( item => {
