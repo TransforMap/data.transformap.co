@@ -16,8 +16,11 @@ module.exports = function (typeName, model) {
     },
     filter: function(filter_string) {
       if(filter_string == '') {
-        return db.viewAll('byId',typeName)
-        .then(convertArrayToFeatureCollection)
+        const convertArrayToTypeFeatureCollection = function (data_array) {
+          return convertArrayToFeatureCollection(data_array,typeName)
+        }
+        return db.viewAll('currentVersionById',typeName)
+        .then(convertArrayToTypeFeatureCollection)
         .then(_.Log(`${typeName} filter all`))
       }
     },
@@ -130,10 +133,11 @@ const updateJournal = function (data, journalId) {
   })
 }
 
-const convertArrayToFeatureCollection = function (data_array) {
+const convertArrayToFeatureCollection = function (data_array, item_type) {
+  const hostname = 'https://data.transformap.co'
   var feature_collection = {
     'type': 'FeatureCollection',
-    'source': 'https://data.transformap.co', // only temporarly here
+    'source': hostname, // only temporarly here
     'license': 'Public Domain',              // -||-
     'features': []
   }
@@ -141,8 +145,9 @@ const convertArrayToFeatureCollection = function (data_array) {
     var feature = item.data
     if(!feature.properties)
       feature.properties = {}
-    feature.properties._uri = 'https://data.transformap.co/' + item.type + '/' + item._id
-    // TODO feature.timestamp = item.timestamp
+    feature.properties._uri = hostname + '/' + item_type + '/' + item.journal
+    feature.properties._timestamp = item.timestamp
+    feature.properties._id = item.journal
     feature_collection.features.push(feature)
   })
   return feature_collection
