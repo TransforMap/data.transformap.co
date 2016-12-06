@@ -5,7 +5,7 @@
 # blocking an emergency backup commit in case of fire
 
 # force pre-commit hooks desactivation
-rm /home/maxlath/transformap/.githooks/pre-commit/*
+rm .githooks/pre-commit/*
 # create emergency branch
 git check-out -b fireBackup
 # commit every known files
