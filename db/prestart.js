@@ -8,9 +8,24 @@ const wrap = (el) => `"${el}"`
 
 const providePassword = function (str) {
   if (str.length === 0) {
-    _.log(str, 'No Admin password set. Generating.')
-    return uuid.v4()
+    console.log('No Admin password set. Generating.')
+    return generatePassword()
   } else {
+    return str
+  }
+}
+
+const generatePassword = function () {
+  var password = uuid.v4()
+  return exportPassword(password)
+}
+
+const exportPassword = function (str) {
+  if (str.length === 0) {
+    return 'No Admin password given. Aborting.'
+  } else {
+    process.env['COUCHDB_PASS'] = str
+    _.log(str, 'Admin password exported to process environment variable.')
     return str
   }
 }

@@ -9,7 +9,7 @@ const cors = function (req, res, next) {
 
 module.exports = {
   common: [
-    americano.bodyParser(),
+    americano.bodyParser({limit: '50mb'}),
     americano.methodOverride(),
     americano.errorHandler({
       dumpExceptions: true,
