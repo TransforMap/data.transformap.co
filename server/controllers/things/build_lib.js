@@ -14,6 +14,32 @@ module.exports = function (typeName, model) {
       return db.viewByKey('byId', [typeName, id])
       .then(_.Log(`${typeName} byId`))
     },
+    filter: function(filter_string) {
+      const convertArrayToTypeFeatureCollection = function (data_array) {
+        return convertArrayToFeatureCollection(data_array,typeName,filter_string)
+      }
+      if(filter_string == '') {
+        return db.viewByKeyRange('currentVersionById', [typeName, '0'], [typeName, 'z'])
+        .then(convertArrayToTypeFeatureCollection)
+        .then(_.Log(`${typeName} filter all`))
+      } else {
+        const key = filter_string.replace(/=.*$/,''),
+              value = filter_string.split('=')[1]
+
+        var startkey, endkey
+        if(value) {
+          startkey = [typeName, key, value]
+          endkey = startkey
+        } else {
+          startkey = [typeName, key, ' ']
+          endkey =  [typeName, key, '\u9999']
+        }
+        return db.viewByKeyRange('byAttribute', startkey, endkey)
+        .then(convertArrayToTypeFeatureCollection)
+        .then(_.Log(`${typeName} filter byAttribute "${key}"="${value}"`))
+      }
+
+    },
     create: function (data) {
       // first make sure we have valid data
       // we don't want to create a journal or anything if the data isn't valid
@@ -121,4 +147,24 @@ const updateJournal = function (data, journalId) {
       return Journal.update(journalDoc, newVersionObject)
     })
   })
+}
+
+const convertArrayToFeatureCollection = function (data_array, item_type, query_string) {
+  const hostname = 'https://data.transformap.co'
+  var feature_collection = {
+    'type': 'FeatureCollection',
+    'source': hostname + '/' + item_type + '/' + query_string,
+    'license': 'Public Domain',              // only temporarly here
+    'features': []
+  }
+  data_array.forEach( item => {
+    var feature = item.data
+    if(!feature.properties)
+      feature.properties = {}
+    feature.properties._uri = hostname + '/' + item_type + '/' + item.journal
+    feature.properties._timestamp = item.timestamp
+    feature.properties._id = item.journal
+    feature_collection.features.push(feature)
+  })
+  return feature_collection
 }

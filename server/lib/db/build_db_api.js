@@ -10,7 +10,17 @@ module.exports = function (db, designName) {
     })
     .then(parseNanoResponse)
     .then(parseDocs)
-    .then(_.Log('viewByKeys'))
+    .then(_.Log(`viewByKeys ${designName} ${viewName} ${keys}`))
+  }
+  const viewByKeyRange = function (viewName, startKey, endKey) {
+    return db.view(designName, viewName, {
+      startkey: startKey,
+      endkey: endKey,
+      include_docs: true
+    })
+    .then(parseNanoResponse)
+    .then(parseDocs)
+    .then(_.Log(`viewByKeyRange ${designName} ${viewName} ${startKey}-${endKey}`))
   }
 
   const get = function (id) {
@@ -44,7 +54,8 @@ module.exports = function (db, designName) {
       .then(parseFirst)
       .then(_.Log('viewByKey'))
     },
-    viewByKeys: viewByKeys
+    viewByKeys: viewByKeys,
+    viewByKeyRange: viewByKeyRange
   }
 }
 
