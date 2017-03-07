@@ -3,40 +3,41 @@ const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const buildController = require('./build_controller')
 
-// Generating the list of contexts names from the files
-// available in the models/contexts folder
+// Generating the list of type-names from the files
+// available in the models/types folder
 const extractName = (filename) => filename.split('.')[0]
-const folder = __.path('controllers', 'things/models/contexts')
-const contextsList = require('fs').readdirSync(folder).map(extractName)
+const folder = __.path('controllers', 'things/models/types')
+const typesList = require('fs').readdirSync(folder).map(extractName)
 
-_.log(contextsList, 'contexts')
+_.log(typesList, 'types')
 
 // HOW TO
 
-// To add a new endpoint, add a new model to server/controllers/things/models/contexts
+// To add a new endpoint, add a new model to server/controllers/things/models/types
 // with a 'validateData' function, taking a data object as input,
 // throwing is something is wrong else returning undefined
 
 module.exports = {
   generateRoutes: function () {
     const routes = {}
-    contextsList.forEach(function (contextName) {
-      _.extend(routes, contextRoutes(contextName))
+    typesList.forEach(function (typeName) {
+      _.extend(routes, typeRoutes(typeName))
     })
     return routes
   }
 }
 
-const contextRoutes = function (contextName) {
-  const controller = buildController(contextName)
+const typeRoutes = function (typeName) {
+  const controller = buildController(typeName)
   const routes = {}
 
-  routes[contextName] = {
+  routes[typeName] = {
     post: controller.post
   }
-  routes[`${contextName}/:id`] = {
+  routes[`${typeName}/:id`] = {
     get: controller.get,
-    put: controller.put
+    put: controller.put,
+    delete: controller.delete
   }
 
   return routes

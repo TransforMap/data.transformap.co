@@ -4,13 +4,28 @@ const _ = __.require('lib', 'utils')
 const breq = require('bluereq')
 const uuid = require('uuid')
 
-const wrap = (el) => `\x27\x22${el}\x22\x27`
+const wrap = (el) => `"${el}"`
 
 const providePassword = function (str) {
   if (str.length === 0) {
-    _.log(str, 'No Admin password set. Generating.')
-    return uuid.v4()
+    console.log('No Admin password set. Generating.')
+    return generatePassword()
   } else {
+    return str
+  }
+}
+
+const generatePassword = function () {
+  var password = uuid.v4()
+  return exportPassword(password)
+}
+
+const exportPassword = function (str) {
+  if (str.length === 0) {
+    return 'No Admin password given. Aborting.'
+  } else {
+    process.env['COUCHDB_PASS'] = str
+    _.log(str, 'Admin password exported to process environment variable.')
     return str
   }
 }
@@ -39,7 +54,7 @@ breq.get(testUrl)
     _.log(CONFIG.store, 'Admins exist.')
     return
   }
-  return breq.put({url: userUrl, body: wrap(password)})
+  return breq.put({url: userUrl, body: wrap(password), headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
   .then((res) => `COUCHDB_URL=${fullUrl}`)
   .then(_.Log('Admin user created.'))
   .catch(_.ErrorRethrow('Admin setup failed.'))

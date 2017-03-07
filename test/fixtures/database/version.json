@@ -1,9 +1,12 @@
 {
   "_id" : "UUID",
   "_rev" : "~~~",
-  "type" : "version",
+  "context" : "version",
   "journal" : "UUID of type=journal object",
-  "deleted" : "true as value if deleted",
+  "status" : {
+    "deleted" : "true as value if deleted"
+  },
+  "type": "place",
   "data" : {
     "type": "Feature",
     "geometry": {

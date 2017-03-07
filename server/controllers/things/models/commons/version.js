@@ -3,9 +3,9 @@ const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const error_ = __.require('lib', 'error')
 
-const PoiVersion = {
+const ThingVersion = {
   create: function (doc) {
-    _.log(doc, 'poi creation doc')
+    _.log(doc, 'model: thing creation doc')
 
     if (!_.isUuid(doc.journal)) {
       throw error_.new('missing journal id', 500, doc)
@@ -16,10 +16,10 @@ const PoiVersion = {
     doc.description = 'Have fun, and thanks for all the fish!'
     // TODO add license from user profile to doc.copyright
 
-    doc.type = 'version'
+    doc.context = 'version'
     doc.timestamp = _.now()
 
-    _.log(doc, 'poi creation formatted doc')
+    _.log(doc, 'model: thing creation formatted doc')
     return doc
   },
   parseCurrentVersion: function (versionDoc) {
@@ -28,8 +28,11 @@ const PoiVersion = {
     // faking to return the journal document id
     // while it's just the last version
     data._id = versionDoc.journal
+
+    if(versionDoc.status && versionDoc.status.deleted === true)
+      data._deleted = true
     return data
   }
 }
 
-module.exports = PoiVersion
+module.exports = ThingVersion

@@ -16,9 +16,30 @@ Install the [Node Version Manager `nvm`](https://github.com/creationix/nvm) by u
 
 The `nvm` command is now ready to manage different [Node.js versions](https://nodejs.org/en/download/). Install a [Long Term Support](https://en.wikipedia.org/wiki/Long-term_support) version with
 
-    nvm install 4
+    nvm install 6
 
 Refer to the [usage documentation](https://github.com/creationix/nvm/blob/master/README.markdown#usage) for more details.
+
+check if you are using the latest version of node with
+
+    nvm ls
+    
+It should point to any 6.\*, like this:
+
+    ->       v6.9.1
+             system
+    default -> 6 (-> v6.9.1)
+    node -> stable (-> v6.9.1) (default)
+    stable -> 6.9 (-> v6.9.1) (default)
+    iojs -> N/A (default)
+    
+If it does not, change to a current one, e.g.
+
+    nvm use node
+    
+It should return
+    
+    Now using node v6.9.1 (npm v3.10.8)
 
 ### Get the code and change into its directory
 

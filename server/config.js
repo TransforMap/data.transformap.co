@@ -4,7 +4,7 @@ const passport = require('./middlewares/passport')
 
 module.exports = {
   common: [
-    americano.bodyParser(),
+    americano.bodyParser({limit: '50mb'}),
     americano.methodOverride(),
     americano.errorHandler({
       dumpExceptions: true,
