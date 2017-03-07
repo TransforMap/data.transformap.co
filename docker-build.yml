@@ -10,6 +10,6 @@ services:
     environment:
       NODE_ENV: 'production'
   geocouch:
-    image: almereyda/geocouch
+    image: 14mmm/geocouch
     expose:
       - "5984"

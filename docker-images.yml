@@ -2,12 +2,12 @@ version: '2'
 
 services:
   web:
-    image: almereyda/transformap-api
+    image: TransforMap/data.transformap.co
     expose:
       - "5000"
     links:
       - geocouch:geocouch
   geocouch:
-    image: almereyda/geocouch
+    image: 14mmm/geocouch
     expose:
       - "5984"
