@@ -9,7 +9,7 @@ To gain experience with the service use it either via the live instance at [`htt
 
 ## Read about it.
 
-If you run into questions or problems while using it, please make yourself first comfortable with [the documentation](http://transformap.viewdocs.io/data.transformap.co/). Another good starting point for developers is [the codebase](https://lab.allmende.io/transformap/api/tree/master).
+If you run into questions or problems while using it, please make yourself first comfortable with [the documentation](https://github.com/TransforMap/data.transformap.co/tree/master/docs). Another good starting point for developers is [the codebase](https://lab.allmende.io/transformap/api/tree/master).
 
 ## Get involved.
 
@@ -23,16 +23,11 @@ For more informal requests or general enquiries, the social side channels of thi
 
 ## Miscellaneous
 
-Use the test suite! Run "npm test" after your changes.
-If you have a local CouchDB running, also run the integration tests:
-  start API with: "npm start"
-  in another terminal: "npm run integration"
+`npm test` : Use the test suite! after your changes.
+`npm start` : (start API), in another terminal: `npm run integration`
 If some of the tests timeout on slow machines on the first run, just rerun them - they will be much faster on subsequent runs after everything is in memcache.
-
-
-Before commiting, run "npm run lint" to get warnings about your coding style.
-
-if you update do a new version, and it throws an Error like: Cannot find module '$newmodule', don't forget to run "npm install"
+`npm run lint` : Before commiting to get warnings about your coding style.
+`npm install` if you update to a new version, and it throws an Error like: Cannot find module '$newmodule'
 
 ## file responsibilities
 
