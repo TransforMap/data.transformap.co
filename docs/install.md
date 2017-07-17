@@ -72,6 +72,6 @@ The service should now be running.
 
 ### 4. Run a development environment
 
-    npm watch
+    npm run watch
 
 The Node Package Manager will now take care of reloading your deamon once the source code changes.
