@@ -2,9 +2,9 @@ const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const records = [
-  { id: 1, username: 'michael', password: 'openstreetmap' },
-  { id: 2, username: 'jon', password: 'dubdubdub' },
-  { id: 3, username: 'gualter', password: 'rocknroll' }
+  { id: 1, gitlab_name: 'michael' },
+  { id: 2, gitlab_name: 'jon' },
+  { id: 3, gitlab_name: 'gualter' }
 ]
 const promises_ = __.require('lib', 'promises')
 
@@ -20,8 +20,5 @@ module.exports = {
       // not returning an Error object as it triggers a 500 response
       return promises_.reject()
     }
-  },
-  verifyPassword: function (user, password) {
-    return user.password === password
   }
 }

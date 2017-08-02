@@ -10,5 +10,10 @@
     "port": "COUCHDB_PORT",
     "username": "COUCHDB_USER",
     "password": "COUCHDB_PASS"
+  },
+  "gitlabOAuth": {
+    "clientID": "GITLAB_CLIENT_ID",
+    "clientSecret": "GITLAB_CLIENT_SECRET",
+    "callbackURL": "GITLAB_CALLBACK_URL"
   }
 }

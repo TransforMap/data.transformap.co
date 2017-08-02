@@ -2,21 +2,25 @@ const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const passport = require('passport')
-const BasicStrategy = require('passport-http').BasicStrategy
+, OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 const user_ = __.require('controllers', 'users/lib/users')
 
-const basicAuthVerify = function (username, password, done) {
-  user_.findOneByUsername(username)
-  .then(function (user) {
-    if (!user) { return done(null, false) }
-    if (!user_.verifyPassword(user, password)) { return done(null, false) }
-    return done(null, user)
-  })
-  .catch(done)
-}
+passport.use('gitlab', GitlabOAuth2Strategy);
 
-passport.use(new BasicStrategy(basicAuthVerify))
-const authenticate = passport.authenticate('basic', { session: false })
+const GitlabOAuth2Strategy = new OAuth2Strategy({
+  authorizationURL: 'https://gitlab.com/oauth/authorize',
+  tokenURL: 'https://www.gitlab.com/oauth2/token',
+  clientID: CONFIG.get('gitlabOAuth.clientID'),
+  clientSecret: CONFIG.get('gitlabOAuth.clientSecret'),
+  callbackURL: CONFIG.get('gitlabOAuth.callbackURL')
+},
+function(accessToken, refreshToken, profile, done) {
+  user_.findOneByUsername(function(err, user) {
+    done(err, user)
+  })
+})
+
+const authenticate = passport.authenticate('gitlab')
 
 module.exports = {
   initialize: passport.initialize(),
@@ -31,5 +35,5 @@ module.exports = {
 
 const isRestrictedRoutes = function (req) {
   const pathname = req._parsedUrl.pathname.replace(/^\//, '')
-  return _.includes([ 'hello' ], pathname)
+  return _.includes([ 'secretPage' ], pathname)
 }
