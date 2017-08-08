@@ -10,7 +10,7 @@
     "prestart": "node ./db/prestart.js",
     "start": "node api.js",
     "watch": "supervisor -w api.js,server -- api.js",
-    "lint": "./node_modules/standard/bin/cmd.js api.js server/**/*js test/**/*js db/**/*js",
+    "lint": "./node_modules/standard/bin/cmd.js --env 'mocha' api.js server/**/*js test/**/*js db/**/*js",
     "fire-emergency-button": "./scripts/fire"
   },
   "repository": {
@@ -46,5 +46,8 @@
   "engines": {
     "node": "^4.2.1",
     "npm": "^2.14.7"
+  },
+  "standard": {
+    "env": ["mocha"]
   }
 }

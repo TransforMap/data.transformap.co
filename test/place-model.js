@@ -3,9 +3,6 @@ const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 require('should')
 
-const it = global.it // for lint
-const describe = global.describe // for lint
-
 const Place = __.require('controllers', 'things/models/types/place')
 
 describe('place model', function () {

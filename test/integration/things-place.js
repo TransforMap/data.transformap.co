@@ -2,8 +2,6 @@ const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 
-const it = global.it // for lint
-const describe = global.describe // for lint
 require('should')
 
 const breq = require('bluereq')

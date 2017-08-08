@@ -3,9 +3,6 @@ const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 require('should')
 
-const it = global.it // for lint
-const describe = global.describe // for lint
-
 const Version = __.require('controllers', 'things/models/commons/version')
 const someJournalId = 'caa653ce22d3213f54338dd45300041c'
 
