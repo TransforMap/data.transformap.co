@@ -6,7 +6,7 @@ const error_ = __.require('lib', 'error')
 module.exports = {
   create: function (type) {
     if (!type) {
-      throw error_.new('expected a type', 500, arguments)
+      throw error_.new('Type attribute missing.', 500, arguments)
     }
     var journal = {
       context: 'journal',
@@ -18,7 +18,7 @@ module.exports = {
   update: function (journalDoc, newVersionDoc) {
     const versionId = newVersionDoc._id
     if (!_.isUuid(versionId)) {
-      throw error_.new('expected version id to be a Couchdb uuid', 500, arguments)
+      throw error_.new('Version attribute not a UUID.', 500, arguments)
     }
     journalDoc.versions.push(versionId)
     journalDoc.data = newVersionDoc.data
