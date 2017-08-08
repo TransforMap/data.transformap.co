@@ -4,12 +4,20 @@ services:
   web:
     build: .
     expose:
-      - "5000"
+      - '5000'
+    ports:
+      - '5000:5000'
+    volumes:
+      - ./:/usr/src/app/
     links:
       - geocouch:geocouch
     environment:
       NODE_ENV: 'production'
   geocouch:
     image: almereyda/geocouch
+    volumes:
+      - ./data:/usr/local/var/lib/couchdb
     expose:
-      - "5984"
+      - '5984'
+    ports:
+      - '5984:5984'

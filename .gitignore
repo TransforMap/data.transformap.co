@@ -3,3 +3,4 @@ npm-debug.log
 config/local.js
 config/development.js
 .*swp
+data/
