@@ -5,6 +5,7 @@ const things = require('./things/things')
 const users = require('./users/routes.js')
 const root = require('./root/root')
 const passport = require('passport')
+const _passport = require('./../middlewares/passport')
 
 const routes = {
   'hello': {
@@ -18,15 +19,15 @@ const routes = {
       res.json({ hello: "foo" })
     }
   },
+  'auth/gitlab': {
+    get: _passport.authentikate
+  },
   'auth/gitlab/callback': {
-    get: function (req, res, next) {
-      passport.authenticate('gitlab', {} , {
-        successRedirect: '/',
-        failureRedirect: '/hello'
-      })
-    }
+    get: _passport.authentikate
   }
 }
+
+
 
 _.extend(routes, things.generateRoutes())
 _.extend(routes, users.generateRoutes())

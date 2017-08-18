@@ -2,16 +2,17 @@ const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const records = [
-  { id: 1, gitlab_name: 'michael' },
-  { id: 2, gitlab_name: 'jon' },
-  { id: 3, gitlab_name: 'gualter' }
+  { id: 1, username: 'michael' },
+  { id: 2, username: 'jon' },
+  { id: 3, username: 'gualter' }
 ]
 const promises_ = __.require('lib', 'promises')
 
 module.exports = {
   findOneByUsername: function (username) {
-    const validUsername = (user) => user.username === username
-    const user = _.find(records, validUsername)
+    console.log('username', username)
+    const isValidUsername = (user) => user.username === username
+    const user = _.find(records, isValidUsername)
     if (user) {
       _.success(username, 'valid user')
       return promises_.resolve(user)
