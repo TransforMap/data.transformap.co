@@ -19,7 +19,6 @@ module.exports = {
     cors,
     passport.initialize,
     passport.session({secret: 'keyboard cat', resave: true, saveUninitialized: true, pauseStream: true}),
-    passport.restrictedRoutes
   ],
   development: [
     logger('dev')
