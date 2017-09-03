@@ -4,29 +4,36 @@ const _ = __.require('lib', 'utils')
 const session = require('express-session')
 const passport = require('passport')
 , OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
-const user_ = __.require('controllers', 'users/lib/users')
+const User = __.require('controllers', '/users/lib/users')
 const breq = require('bluereq')
 
 const GitlabOAuth2Strategy = new OAuth2Strategy({
-  authorizationURL: 'https://lab.allmende.io/oauth/authorize',
-  tokenURL: 'https://lab.allmende.io/oauth/token',
-  clientID: CONFIG.get('gitlabOAuth.clientID'),
-  clientSecret: CONFIG.get('gitlabOAuth.clientSecret'),
-  callbackURL: CONFIG.get('gitlabOAuth.callbackURL'),
+  authorizationURL: CONFIG.get('auth.gitlab.authorizationURL'),
+  tokenURL: CONFIG.get('auth.gitlab.tokenURL'),
+  clientID: CONFIG.get('auth.gitlab.clientID'),
+  clientSecret: CONFIG.get('auth.gitlab.clientSecret'),
+  callbackURL: CONFIG.get('auth.gitlab.callbackURL'),
 }, function(accessToken, refreshToken, profile, done) {
-  // Problematic empty user profile from la.allmende.io
-  console.log("profile", profile)
-  // User mock to be deleted
-  done(null, {id:2})
+  // smell: `profile` should be filled with user info, instead requesting user info through accessToken endpoint
+  accessTokenEndpoint = "https://lab.allmende.io/api/v3/user?access_token="
+  breq.get( accessTokenEndpoint + accessToken )
+  .then(function (res) {
+    const userInfo = {
+      name: res.body.username,
+      email: res.body.email,
+      provider: res.body.web_url
+    }
+    User.findOrCreateUser(userInfo, done)
+  })
 })
 
 passport.serializeUser(function(user, done) {
-  _.success(id = user.id, 'serializeUser')
+  _.success(id = user.journal, 'serializeUser')
   done(null, id)
 })
 
 passport.deserializeUser(function(id, done) {
-  user_.byId(id)
+  User.byId(id)
   .then(function(user){
     done(null, user)
   })
@@ -38,15 +45,20 @@ passport.deserializeUser(function(id, done) {
 
 passport.use('gitlab', GitlabOAuth2Strategy);
 
-const authentikate = passport.authenticate('gitlab', { failureRedirect: '/' })
+const authenticate = passport.authenticate('gitlab', { failureRedirect: '/', successReturnToOrRedirect: '/' })
 
-function successRedirect(req, res, next) {
-  res.redirect('/secretPage')
+function ensureAuthenticated(req, res, next) {
+  if(req.session.passport){
+    next()
+  } else {
+    req.session.returnTo = req.originalUrl || req.url
+    authenticate(req, res, next)
+  }
 }
 
 module.exports = {
   initialize: passport.initialize(),
   session: session,
-  authentikate: authentikate,
-  successRedirect: successRedirect
+  authenticate: authenticate,
+  ensureAuthenticated: ensureAuthenticated,
 }

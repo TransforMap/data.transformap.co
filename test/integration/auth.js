@@ -27,7 +27,7 @@ describe('/auth/logout', function () {
   it('it should end the session and show a public page', function (done) {
     breq.get(`${endpoint}auth/logout`)
     .then(function(body) {
-      body.req.path.should.equal("/hello")
+      body.req.path.should.equal("/auth/logout")
       done();
     });
   });

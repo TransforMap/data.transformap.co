@@ -15,29 +15,21 @@ const routes = {
   },
   'secretPage': {
     get: [
-      ensureAuthenticated,
+      _passport.ensureAuthenticated,
       function(req, res, next) {
         res.json({ userId: req.session.passport.user })
       }
     ]
   },
-  'auth/gitlab': {
-    get: _passport.authentikate
+  'auth': {
+    get: _passport.authenticate
   },
-  'auth/gitlab/callback': {
-    get: [
-      _passport.authentikate,
-      function(req, res, next) {
-        _passport.successRedirect(req, res, next)
-      }
-    ]
-  },
-  'auth/logout': {
+  'logout': {
     get: function(req, res, next) {
-      console.log('logging out')
       req.session.regenerate(function(){
         req.logout()
-        res.redirect('/hello')
+        _.success('logging out')
+        res.redirect('/')
       })
     }
   }
@@ -48,7 +40,3 @@ _.extend(routes, users.generateRoutes())
 _.extend(routes, root.generateHypermedia(routes))
 
 module.exports = _.log(routes, 'routes')
-
-function ensureAuthenticated(req, res, next) {
-  req.session.passport ? next() : res.redirect('auth/gitlab')
-}
