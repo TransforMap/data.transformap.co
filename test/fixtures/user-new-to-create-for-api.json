@@ -1,0 +1,10 @@
+{
+  "type": "User",
+  "contact": {
+    "name": "Lumumba",
+    "email": "unchained@mastodon.org"
+  },
+  "auth": {
+    "provider": "http://lab.allmende.io"
+  }
+}

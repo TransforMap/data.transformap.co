@@ -1,0 +1,15 @@
+{
+   "_id": "_design/users",
+   "language": "javascript",
+   "views": {
+       "byId": {
+           "map": "function(doc) {\n  if (doc.context === 'user') {\n    emit([doc.type, doc._id], null)\n  }\n}"
+       },
+       "currentVersionById": {
+           "map": "function(doc) {\n  if (doc.context === 'user') {\n    var lastVersionId = doc.versions.slice(-1)[0]\n    emit([doc.type, doc._id], {'_id': lastVersionId})\n  }\n}"
+       },
+       "byAttribute": {
+           "map": "function(doc) {\n  if (doc.context === 'user' && doc.type === 'user' && doc.data && doc.data.properties && ( ! (doc.status && doc.status.deleted) ) ) {\n    var lastVersionId = doc.versions.slice(-1)[0]\n    const attributes = doc.data.properties\n     for(key in attributes) {\n      const value = attributes[key]\n      emit([doc.type, key, value], {'_id': lastVersionId})\n    }\n  }\n}"
+       }
+   }
+}
