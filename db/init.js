@@ -10,7 +10,7 @@ const dbsList = [
   },
   {
     name: 'users',
-    designDocs: ['journals', 'versions']
+    designDocs: ['users']
   }
 ]
 

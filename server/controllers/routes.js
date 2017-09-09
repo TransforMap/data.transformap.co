@@ -2,6 +2,7 @@ const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const things = require('./things/things')
+const users = require('./users/routes.js')
 const root = require('./root/root')
 
 const routes = {
@@ -14,6 +15,7 @@ const routes = {
 }
 
 _.extend(routes, things.generateRoutes())
+_.extend(routes, users.generateRoutes())
 _.extend(routes, root.generateHypermedia(routes))
 
 module.exports = _.log(routes, 'routes')

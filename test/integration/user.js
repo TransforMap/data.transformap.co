@@ -7,17 +7,28 @@ const describe = global.describe // for lint
 require('should')
 
 const breq = require('bluereq')
-const get = (url) => breq.get(url).then(_.property('body'))
-const post = (url, body) => breq.post(url, body).then(_.property('body'))
-const put = (url, body) => breq.put(url, body).then(_.property('body'))
-const delete_ = (url) => breq.delete(url).then(_.property('body'))
-const endpoint = CONFIG.server.url() + '/user'
+const endpoint = CONFIG.server.url() + '/users'
 const userNewDoc = require('../fixtures/user-new-to-create-for-api')
 
-describe('/user', function () {
+describe('/users', function () {
+  describe('GET doc', function () {
+    it('should return the doc id', function (done) {
+      breq.post(endpoint, userNewDoc)
+      .then(_.property('body'))
+      .then(function (body) {
+        const userId = body.id
+        breq.get(`${endpoint}/${userId}`)
+        .then(function (body) {
+          _.isUuid(userId).should.equal(true)
+          done()
+        })
+      })
+    })
+  })
   describe('POST doc', function () {
-    it('should return the doc with journal id', function (done) {
-      post(endpoint, userNewDoc)
+    it('should return the doc id', function (done) {
+      breq.post(endpoint, userNewDoc)
+      .then(_.property('body'))
       .then(function (body) {
         body.ok.should.equal(true)
         _.isUuid(body.id).should.equal(true)
