@@ -19,16 +19,21 @@ const GitlabOAuth2Strategy = new OAuth2Strategy({
   breq.get( accessTokenEndpoint + accessToken )
   .then(function (res) {
     const userInfo = {
-      name: res.body.username,
-      email: res.body.email,
-      provider: res.body.web_url
+      contact: {
+        name: res.body.username,
+        email: res.body.email,
+      },
+      auth: {
+        provider: res.body.web_url
+      }
     }
-    User.findOrCreateUser(userInfo, done)
+    const user = User.findOrCreateUser(userInfo)
+    done(null, user)
   })
 })
 
 passport.serializeUser(function(user, done) {
-  _.success(id = user.journal, 'serializeUser')
+  _.success(id = user._id, 'serializeUser')
   done(null, id)
 })
 

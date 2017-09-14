@@ -9,14 +9,16 @@ module.exports = {
   },
   findOrCreateUser: function(userInfo, done){
     // mock user api (see branch 416-user-api)
-    const wannabeUser = {
-      journal: 'bcf4f3ff325d7c8c7a5f67320e01a3f0',
-      data: {
-         name: 'moleculor',
-         email: 'vincent.jumeaux@riseup.net',
-         provider: 'https://lab.allmende.io/u/moleculor'
-       }
+    return {
+      "_id": "uuids56s432",
+      "type": "User",
+      "contact": {
+        "name": "Lumumba",
+        "email": "unchained@mastodon.org"
+      },
+      "auth": {
+        "provider": "http://lab.allmende.io"
+      }
     }
-    done(null, wannabeUser)
   }
 }
