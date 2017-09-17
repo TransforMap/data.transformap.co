@@ -11,9 +11,9 @@ const ThingVersion = {
       throw error_.new('missing journal id', 500, doc)
     }
 
-    // TODO add userid to doc.userid
-    doc.author = 'Douglas Adams'
-    doc.description = 'Have fun, and thanks for all the fish!'
+    // TODO add userid to doc.userid; use identities provided by OpenID connect
+    // doc.author = 'Douglas Adams'
+    // doc.description = 'Have fun, and thanks for all the fish!'
     // TODO add license from user profile to doc.copyright
 
     doc.context = 'version'
