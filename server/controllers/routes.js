@@ -16,7 +16,7 @@ const routes = {
   'secretPage': {
     get: [
       _passport.ensureAuthenticated,
-      function(req, res, next) {
+      function (req, res, next) {
         res.json({ userId: req.session.passport.user })
       }
     ]
@@ -25,8 +25,8 @@ const routes = {
     get: _passport.authenticate
   },
   'logout': {
-    get: function(req, res, next) {
-      req.session.regenerate(function(){
+    get: function (req, res, next) {
+      req.session.regenerate(function () {
         req.logout()
         _.success('logging out')
         res.redirect('/')
