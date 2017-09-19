@@ -1,3 +1,4 @@
+const CONFIG = require('config')
 const americano = require('americano')
 const passport = require('./middlewares/passport')
 
@@ -18,7 +19,12 @@ module.exports = {
     }),
     cors,
     passport.initialize,
-    passport.session({secret: 'keyboard cat', resave: true, saveUninitialized: true, pauseStream: true}),
+    passport.session({
+      secret: CONFIG.get('auth.passportSessionSecret'),
+      resave: true,
+      saveUninitialized: true, pauseStrea
+      : true
+    }),
   ],
   development: [
     logger('dev')
