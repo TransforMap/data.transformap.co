@@ -12,13 +12,13 @@
     "password": "COUCHDB_PASS"
   },
   "auth":{
-    "passportSessionSecret": "keyboard cat",
+    "passportSessionSecret": "AUTH_PASSPORT_SESSION_SECRET",
     "gitlab": {
       "clientID": "GITLAB_CLIENT_ID",
       "clientSecret": "GITLAB_CLIENT_SECRET",
-      "callbackURL": "SERVER_URL/auth",
-      "authorizationURL": "https://lab.allmende.io/oauth/authorize",
-      "tokenURL": "https://lab.allmende.io/oauth/token"
+      "callbackURL": "CALLBACK_URL",
+      "authorizationURL": "GITLAB_OAUTH_AUTHORIZE_URL",
+      "tokenURL": "GITLAB_OAUTH_TOKEN_URL"
     }
   }
 }
