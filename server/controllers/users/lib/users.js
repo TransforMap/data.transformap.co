@@ -5,19 +5,17 @@ const error_ = __.require('lib', 'error')
 const promises_ = __.require('lib', 'promises')
 
 module.exports = {
-  validateData: function (data) {
-  },
-  findOrCreateUser: function(userInfo, done){
-    // mock user api (see branch 416-user-api)
-    return {
-      "_id": "uuids56s432",
-      "type": "User",
-      "contact": {
-        "name": "Lumumba",
-        "email": "unchained@mastodon.org"
-      },
-      "auth": {
-        "provider": "http://lab.allmende.io"
+  validateData: validateData,
+  create: create,
+  byUsername: byUsername,
+  byId: byId,
+  findOrCreateUser: function(userInfo){
+    return byUsername(userInfo.contact.name)
+    .then(function (foundUser) {
+      if(foundUser){
+        return foundUser
+      } else {
+        return create(userInfo)
       }
     }
   }

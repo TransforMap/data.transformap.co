@@ -7,7 +7,7 @@ const User = __.require('controllers', '/users/lib/users')
 const gitlabStrategy = require('./strategies/gitlab')
 
 passport.serializeUser(function (user, done) {
-  const id = user._id
+  const id = user.id || user._id
   _.success(id, 'serializeUser')
   done(null, id)
 })

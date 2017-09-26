@@ -24,8 +24,10 @@ const GitlabOAuth2Strategy = new OAuth2Strategy({
         provider: res.body.web_url
       }
     }
-    const user = User.findOrCreateUser(userInfo)
-    done(null, user)
+    User.findOrCreateUser(userInfo)
+    .then(function(user){
+      done(null, user)
+    })
   })
 })
 
