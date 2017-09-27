@@ -1,6 +1,8 @@
 module.exports = {
+  env: 'development',
   universalPath: require('./universal_path'),
   server: {
+    name: 'transformap',
     scheme: 'http',
     host: '127.0.0.1',
     port: 5000,
