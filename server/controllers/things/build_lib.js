@@ -5,6 +5,7 @@ const db = __.require('lib', 'db/db')('things', 'journals')
 const Journal = require('./models/commons/journal')
 const Version = require('./models/commons/version')
 const versions_ = require('./lib/versions')
+const upload = require('./lib/upload.js')
 const promises_ = __.require('lib', 'promises')
 const error_ = __.require('lib', 'error')
 
@@ -127,6 +128,24 @@ module.exports = function (typeName, model) {
         })
       })
       .then(_.Log('return value of insert'))
+    },
+    upload: function (data, file) {
+
+      try {
+        model.validateData(data)
+      } catch (err) {
+        return promises_.reject(err)
+      }
+
+      data.hash = upload(file)
+
+      return db.post(Journal.create(typeName))
+      .then(_.Log('journal post res'))
+      .then(_.property('id'))
+      .then(_.partial(updateJournal, data))
+      .then(_.Log('thing created'))
+      .catch(_.ErrorRethrow('thing creation err'))
+
     }
   }
 }

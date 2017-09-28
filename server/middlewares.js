@@ -12,6 +12,7 @@ module.exports = {
     require('body-parser').json(),
     require('method-override')(),
     require('errorhandler')({ dumpExceptions: true, showStack: true }),
+    require('express-fileupload')(),
     cors
   ],
   development: [
