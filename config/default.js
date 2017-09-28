@@ -18,5 +18,13 @@ module.exports = {
     url: function () {
       return `${this.scheme}://${this.username}:${this.password}@${this.host}:${this.port}`
     }
+  },
+  blobStore: {
+    scheme: 'http',
+    host: '127.0.0.1',
+    port: 5001,
+    url: function () {
+      return `${this.scheme}://{this.host}:${this.port}`
+    }
   }
 }
