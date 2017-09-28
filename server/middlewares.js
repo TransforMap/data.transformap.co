@@ -1,4 +1,4 @@
-const americano = require('americano')
+const logger = require('morgan')
 
 const cors = function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
@@ -9,18 +9,15 @@ const cors = function (req, res, next) {
 
 module.exports = {
   common: [
-    americano.bodyParser({limit: '50mb'}),
-    americano.methodOverride(),
-    americano.errorHandler({
-      dumpExceptions: true,
-      showStack: true
-    }),
+    require('body-parser').json(),
+    require('method-override')(),
+    require('errorhandler')({ dumpExceptions: true, showStack: true }),
     cors
   ],
   development: [
-    americano.logger('dev')
+    logger('dev')
   ],
   production: [
-    americano.logger('short')
+    logger('short')
   ]
 }
