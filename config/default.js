@@ -22,11 +22,12 @@ module.exports = {
     }
   },
   blobStore: {
-    scheme: 'http',
-    host: '127.0.0.1',
+    transport: 'ip4',
+    address: '127.0.0.1',
+    protocol: 'tcp',
     port: 5001,
-    url: function () {
-      return `${this.scheme}://{this.host}:${this.port}`
+    multiaddr: function () {
+      return `/${this.transport}/${this.addr}/${this.proto}/${this.port}`
     }
   }
 }

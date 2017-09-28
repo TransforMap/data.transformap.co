@@ -12,8 +12,10 @@
     "password": "COUCHDB_PASS"
   },
   "blobStore": {
-    "scheme": "BLOB_SCHEME",
-    "host": "BLOB_HOST",
-    "port": "BLOB_PORT"
+    "transport": "BLOB_TRANSPORT",
+    "address": "BLOB_ADDRESS",
+    "protocol": "BLOB_PROTOCOL",
+    "port": "BLOB_PORT",
+    "multiaddr": "BLOB_MULTIADDR"
   }
 }
