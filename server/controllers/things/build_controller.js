@@ -25,16 +25,10 @@ module.exports = function (typeName) {
       }
     },
     post: function (req, res) {
-      if (req.files) {
-        lib.upload(req.body, req.files.mediaUpload) // code smell: hard coded input id, configurable, or per type?
-        .then(res.json.bind(res))
-        .catch(error_.Handler(res))
-      } else {
+
         lib.create(req.body)
         .then(res.json.bind(res))
         .catch(error_.Handler(res))
-      }
-
 
     },
     put: function (req, res) {
@@ -46,9 +40,15 @@ module.exports = function (typeName) {
         return
       }
 
-      lib.update(req.body, id)
-      .then(res.json.bind(res))
-      .catch(error_.Handler(res))
+      if (!req.files) {
+        lib.update(req.body, id)
+        .then(res.json.bind(res))
+        .catch(error_.Handler(res))
+      } else {
+        lib.upload(req.body, req.files.mediaUpload, id) // hard coded <input id="mediaUpload" />; configurable, or per type?
+        .then(res.json.bind(res))
+        .catch(error_.Handler(res))
+    }
 
     },
     delete: function (req, res) {

@@ -129,7 +129,7 @@ module.exports = function (typeName, model) {
       })
       .then(_.Log('return value of insert'))
     },
-    upload: function (data, file) {
+    upload: function (data, file, journalId) {
 
       try {
         model.validateData(data)
@@ -137,13 +137,13 @@ module.exports = function (typeName, model) {
         return promises_.reject(err)
       }
 
-      data.hash = upload(file)
+      data.ipfs = upload(file)
 
-      return db.post(Journal.create(typeName))
+      return db.viewByKey('byId', [typeName, journalId])
+      .then(reject404)
       .then(_.Log('journal post res'))
-      .then(_.property('id'))
-      .then(_.partial(updateJournal, data))
-      .then(_.Log('thing created'))
+      .then(_.partial(updateJournal, data, journalId))
+      .then(_.Log('thing uploaded'))
       .catch(_.ErrorRethrow('thing creation err'))
 
     }
