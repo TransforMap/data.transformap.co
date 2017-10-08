@@ -20,6 +20,11 @@ module.exports = {
     cors,
     passport.initialize,
     passport.session({
+      cookie: {
+        path    : '/',
+        httpOnly: true,
+        maxAge  : 24*60*60*1000
+      },
       secret: CONFIG.get('auth.passportSessionSecret'),
       resave: true,
       saveUninitialized: true, pauseStrea

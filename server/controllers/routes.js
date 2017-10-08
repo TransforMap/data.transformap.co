@@ -13,16 +13,13 @@ const routes = {
       res.json({ hello: name })
     }
   },
-  'secretPage': {
+  'auth': {
     get: [
       _passport.ensureAuthenticated,
       function (req, res, next) {
-        res.json({ userId: req.session.passport.user })
+        res.redirect(req.session.returnTo)
       }
     ]
-  },
-  'auth': {
-    get: _passport.authenticate
   },
   'logout': {
     get: function (req, res, next) {

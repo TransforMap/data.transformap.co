@@ -25,14 +25,19 @@ passport.deserializeUser(function (id, done) {
 
 passport.use('gitlab', gitlabStrategy.auth)
 
-const authenticate = passport.authenticate('gitlab', { failureRedirect: '/', successReturnToOrRedirect: '/' })
+const redirectionParams = {
+  failureRedirect: '/',
+  successReturnToOrRedirect: '/user'
+}
+const authenticate = passport.authenticate('gitlab', redirectionParams)
 
 function ensureAuthenticated (req, res, next) {
-  if (req.session.passport) {
-    next()
-  } else {
-    req.session.returnTo = req.originalUrl || req.url
+  req.session.returnTo = req.headers.referer
+  if (req.session.passport === undefined) {
     authenticate(req, res, next)
+  } else {
+    _.log(req.session.passport.user, 'Already authenticated user')
+    next()
   }
 }
 
