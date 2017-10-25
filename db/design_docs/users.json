@@ -6,7 +6,7 @@
       "map": "function(doc) {emit(doc.contact.name, null)}"
     },
     "byId": {
-      "map": "function(doc) {emit([doc.type, doc._id], null)}"
+      "map": "function(doc) {emit(doc._id, null)}"
     }
   }
 }
