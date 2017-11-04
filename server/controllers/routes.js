@@ -17,7 +17,8 @@ const routes = {
     get: [
       _passport.ensureAuthenticated,
       function (req, res, next) {
-        res.redirect(req.session.returnTo)
+        // triggered when already authenticated, go back to client
+        res.redirect(req.headers.referer)
       }
     ]
   },

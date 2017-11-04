@@ -14,7 +14,6 @@ const cors = function (req, res, next) {
   }
 }
 
-
 module.exports = {
   common: [
     require('body-parser').json(),
@@ -26,8 +25,7 @@ module.exports = {
       cookie: {
         path    : '/',
         httpOnly: true,
-        maxAge  : 30*24*60*60*1000,
-        domain  : 'allmende.io'
+        maxAge  : 30*24*60*60*1000
       },
       secret: CONFIG.get('auth.passportSessionSecret'),
       resave: true,

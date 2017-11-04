@@ -9,6 +9,8 @@ const extractName = (filename) => filename.split('.')[0]
 const folder = __.path('controllers', 'things/models/types')
 const typesList = require('fs').readdirSync(folder).map(extractName)
 
+const _passport = require('../../middlewares/passport')
+
 _.log(typesList, 'types')
 
 // HOW TO
@@ -32,12 +34,12 @@ const typeRoutes = function (typeName) {
   const routes = {}
 
   routes[typeName] = {
-    post: controller.post
+    post: [ _passport.ensureAuthenticated, controller.post ]
   }
   routes[`${typeName}/:id`] = {
     get: controller.get,
-    put: controller.put,
-    delete: controller.delete
+    put: [ _passport.ensureAuthenticated, controller.put ],
+    delete: [ _passport.ensureAuthenticated, controller.delete ]
   }
 
   return routes
