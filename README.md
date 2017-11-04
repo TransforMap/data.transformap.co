@@ -15,6 +15,7 @@ The [documentation of this code repository](http://transformap.viewdocs.io/data.
 We acknowledge authorship of this source code to the following individuals (*in alphabetical order*):
 
 * Gualter Barbas Baptista — [Ecobytes](https://ecobytes.net/) — @gandhiano
+* Vincent Jumeaux — [Dev4Dev](https://dev4dev.eu) - @jum-s
 * Adrien Labaeye — [TransforMap — Who is who?](https://discourse.transformap.co/t/236) — @adrienlab
 * Maxime Lathuilière — [maxlath.eu](http://maxlath.eu/) — @maxlath
 * Michael Maier — [osm.org/user/species](https://www.openstreetmap.org/user/species) — @species
