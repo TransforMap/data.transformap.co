@@ -18,7 +18,8 @@
       "clientSecret": "GITLAB_CLIENT_SECRET",
       "callbackURL": "CALLBACK_URL",
       "authorizationURL": "GITLAB_OAUTH_AUTHORIZE_URL",
-      "tokenURL": "GITLAB_OAUTH_TOKEN_URL"
+      "tokenURL": "GITLAB_OAUTH_TOKEN_URL",
+      "state": "1234567890"
     },
     "clientEndpoint": "CLIENT_ENDPOINT"
   }
