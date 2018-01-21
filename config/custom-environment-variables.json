@@ -19,6 +19,7 @@
       "callbackURL": "CALLBACK_URL",
       "authorizationURL": "GITLAB_OAUTH_AUTHORIZE_URL",
       "tokenURL": "GITLAB_OAUTH_TOKEN_URL"
-    }
+    },
+    "clientEndpoint": "CLIENT_ENDPOINT"
   }
 }
