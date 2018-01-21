@@ -14,6 +14,7 @@
   "auth":{
     "passportSessionSecret": "AUTH_PASSPORT_SESSION_SECRET",
     "gitlab": {
+      "accessTokenEndpoint": "GITLAB_ACCESS_TOKEN_ENDPOINT",
       "clientID": "GITLAB_CLIENT_ID",
       "clientSecret": "GITLAB_CLIENT_SECRET",
       "callbackURL": "CALLBACK_URL",
