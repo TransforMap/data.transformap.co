@@ -23,6 +23,7 @@ module.exports = {
     passport.initialize,
     passport.session({
       cookie: {
+        key: CONFIG.get('store.host'),
         path    : '/',
         httpOnly: true,
         maxAge  : 30*24*60*60*1000
