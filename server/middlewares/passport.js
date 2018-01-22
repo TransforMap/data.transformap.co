@@ -30,7 +30,7 @@ passport.use('gitlab', gitlabStrategy.auth)
 
 const redirectionParams = {
   failureRedirect: '/',
-  successReturnToOrRedirect: '/user',
+  successReturnToOrRedirect: '/',
   state: CONFIG.get('auth.gitlab.state')
 }
 const authenticate = passport.authenticate('gitlab', redirectionParams)
