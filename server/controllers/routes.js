@@ -27,7 +27,7 @@ const routes = {
       req.session.regenerate(function () {
         req.logout()
         _.success('logging out')
-        res.redirect('/')
+        res.redirect(req.headers.referer)
       })
     }
   }

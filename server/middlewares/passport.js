@@ -30,7 +30,7 @@ passport.use('gitlab', gitlabStrategy.auth)
 
 const redirectionParams = {
   failureRedirect: '/',
-  successReturnToOrRedirect: CONFIG.get('auth.clientEndpoint'),
+  successReturnToOrRedirect: '/user',
   state: CONFIG.get('auth.gitlab.state')
 }
 const authenticate = passport.authenticate('gitlab', redirectionParams)
@@ -41,7 +41,7 @@ function ensureAuthenticated (req, res, next) {
   if (req.session.passport && _.isUuid(req.session.passport.user)) {
     next()
   } else {
-    req.session.returnTo = CONFIG.get('auth.clientEndpoint')
+    req.session.returnTo = req.headers.referer
     authenticate(req, res, next)
   }
 }
