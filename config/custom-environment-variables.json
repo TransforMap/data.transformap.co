@@ -22,6 +22,7 @@
       "tokenURL": "GITLAB_OAUTH_TOKEN_URL",
       "state": "STATE"
     },
-    "clientEndpoint": "CLIENT_ENDPOINT"
+    "clientEndpoint": "CLIENT_ENDPOINT",
+    "cookieDomain": "COOKIE_DOMAIN"
   }
 }
