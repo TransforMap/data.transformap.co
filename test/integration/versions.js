@@ -82,6 +82,13 @@ describe('/versions/latest/:limit', function () {
       })
     })
   })
+  it('should return 400 if :limit is not a number', function (done) {
+    breq.get(`${versionsEndpoint}/latest/notanumber`)
+    .then(function (res) {
+      res.statusCode.should.equal(400)
+      done()
+    })
+  })
 })
 
 describe('/versions/:id', function () {

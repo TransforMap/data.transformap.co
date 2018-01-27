@@ -27,7 +27,12 @@ module.exports = function () {
       .catch(error_.Handler(res))
     },
     latest: function (req, res) {
-      const count = req.params.count
+      const count = parseInt(req.params.count)
+      if(isNaN(count)) {
+        error_.bundle(res, 'invalid count', 400, count)
+        return
+      }
+
       lib.latest(count)
       .then(res.json.bind(res))
       .then(error_.Handler(res))
