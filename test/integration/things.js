@@ -81,25 +81,25 @@ describe('/place', function () {
     it('should return a feature collection', function (done) {
       createJournalWithTwoVersions(placeNewDoc, function (journalId, firstVersion, secondVersion) {
         get(`${endpoint}/${journalId}/versions`)
-        .then( function (versionsResponse) {
+        .then(function (versionsResponse) {
           versionsResponse.type.should.equal('FeatureCollection')
           done()
         })
       })
     })
-    it('should return all versions of that journal', function(done) {
+    it('should return all versions of that journal', function (done) {
       createJournalWithTwoVersions(placeNewDoc, function (journalId, firstVersion, secondVersion) {
         get(`${endpoint}/${journalId}/versions`)
-        .then( function (versionsResponse) {
+        .then(function (versionsResponse) {
           versionsResponse.features.length.should.equal(2)
           done()
         })
       })
     })
-    it('should raise an error on non existing UUID', function(done) {
+    it('should raise an error on non existing UUID', function (done) {
       get(`${endpoint}/76100b453de20da6744eac86700294b8/versions`)
-      .then( _.Log('error response'))
-      .then( function (errorResponse) {
+      .then(_.Log('error response'))
+      .then(function (errorResponse) {
         errorResponse.status.should.equal('no object with this id in db')
         done()
       })
