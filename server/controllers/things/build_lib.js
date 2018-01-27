@@ -83,7 +83,7 @@ module.exports = function (typeName, model) {
       .then(_.Log('versionsById'))
       .then(rejectEmptyCollection404)
       .then(function (resultArray) {
-        return convertArrayToFeatureCollection(resultArray, typeName, `${id}/versions`)
+        return convertArrayToVersionFeatureCollection(resultArray, typeName, `${id}/versions`)
       })
     },
     versionById: function (id, versionId) {
@@ -157,7 +157,7 @@ const reject404 = function (doc) {
   if (!_.isPlainObject(doc)) {
     throw error_.new('no object with this id in db', 404, doc)
   }
-  return doc
+  return docType
 }
 
 const rejectEmptyCollection404 = function (doc) {
@@ -196,5 +196,28 @@ const convertArrayToFeatureCollection = function (data_array, item_type, query_s
     feature.properties._verionId = item._id
     feature_collection.features.push(feature)
   })
+  return feature_collection
+}
+
+const convertArrayToVersionFeatureCollection = function(data_array, item_type, query_string) {
+  const hostname = 'https://data.transformap.co'
+  var feature_collection = {
+    'type': 'FeatureCollection',
+    'source': hostname + '/' + item_type + '/' + query_string,
+    'license': 'Public Domain',
+    'features': []
+  }
+
+  data_array.forEach( item => {
+    var feature = item.data
+    if(!feature.properties)
+      feature.properties = {}
+    feature.properties._uri = `${hostname}/${item_type}/${item.journal}/version/${item._id}`
+    feature.properties._timestamp = item.timestamp
+    feature.properties._id = item.journal
+    feature.properties._versionId = item._versionId
+    feature_collection.features.push(feature)
+  })
+
   return feature_collection
 }
