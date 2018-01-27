@@ -19,7 +19,7 @@ const createJournalWithTwoVersions = function (doc, callback) {
   .then(function (createResponse) {
     get(`${endpoint}/${createResponse.id}`)
     .then(function (firstVersion) {
-      doc.properties.name += ' - Version 2 '
+      doc.properties.name += ' - Version 2'
       put(`${endpoint}/${firstVersion._id}`, doc)
       .then(function (updateResponse) {
         get(`${endpoint}/${updateResponse.id}`)
@@ -104,6 +104,69 @@ describe('/place', function () {
       .then(function (errorResponse) {
         errorResponse.status.should.equal('no object with this id in db')
         done()
+      })
+    })
+  })
+  describe('GET id/version/versionId', function () {
+    it('should return the version of id identifier by versionId', function (done) {
+      createJournalWithTwoVersions(placeNewDoc, function (journalId, firstVersion, secondVersion) {
+        get(`${endpoint}/${journalId}/version/${firstVersion._versionId}`)
+        .then(function (versionGetResponse) {
+          firstVersion._versionId.should.equal(versionGetResponse._versionId)
+          JSON.stringify(firstVersion).should.equal(JSON.stringify(versionGetResponse))
+          done()
+        })
+      })
+    })
+    it('should not retreive the most recent version', function (done) {
+      createJournalWithTwoVersions(placeNewDoc, function (journalId, firstVersion, secondVersion) {
+        get(`${endpoint}/${journalId}`)
+        .then(function (latestVersionResponse) {
+          get(`${endpoint}/${journalId}/version/${firstVersion._versionId}`)
+          .then(function (getVersionResponse) {
+            latestVersionResponse.properties.name
+              .should.equal(secondVersion.properties.name)
+            getVersionResponse.properties.name
+              .should.equal(firstVersion.properties.name)
+            done()
+          })
+        })
+      })
+    })
+    it('should return 400 for an invlaid id', function (done) {
+      breq.get(`${endpoint}/someInvalidId/version/someInvalidVersionId`)
+      .then(function (res) {
+        res.statusCode.should.equal(400)
+        res.body.status.should.equal('invalid id')
+        done()
+      })
+    })
+    it('should return 400 for an invalid version id', function (done) {
+      breq.get(`${endpoint}/76100b453de20da6744eac86700294b8/version/someInvalidVersionId`)
+      .then(function (res) {
+        res.statusCode.should.equal(400)
+        res.body.status.should.equal('invalid version id')
+        done()
+      })
+    })
+    it('should return 404 for an unknown id', function (done) {
+      createJournalWithTwoVersions(placeNewDoc, function (journalId, firstVersion, secondVersion) {
+        breq.get(`${endpoint}/76100b453de20da6744eac86700294b8/version/${firstVersion._versionId}`)
+        .then(function (res) {
+          res.statusCode.should.equal(404)
+          res.body.status.should.equal('no object with this id in db')
+          done()
+        })
+      })
+    })
+    it('should return 404 for an unknown versionId', function (done) {
+      createJournalWithTwoVersions(placeNewDoc, function (journalId, firstVersion, secondVersion) {
+        breq.get(`${endpoint}/${journalId}/version/76100b453de20da6744eac86700294b8`)
+        .then(function (res) {
+          res.statusCode.should.equal(404)
+          res.body.status.should.equal('no object with this id in db')
+          done()
+        })
       })
     })
   })

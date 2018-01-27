@@ -42,6 +42,9 @@ const typeRoutes = function (typeName) {
   routes[`${typeName}/:id/versions`] = {
     get: controller.getVersions
   }
+  routes[`${typeName}/:id/version/:versionId`] = {
+    get: controller.getVersion
+  }
 
   return routes
 }

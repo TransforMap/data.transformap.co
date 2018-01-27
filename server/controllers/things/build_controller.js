@@ -36,6 +36,24 @@ module.exports = function (typeName) {
       .then(res.json.bind(res))
       .catch(error_.Handler(res))
     },
+    getVersion: function (req, res) {
+      const id = req.params.id
+      const versionId = req.params.versionId
+
+      if(!_.isUuid(id)) {
+        error_.bundle(res, 'invalid id', 400, id)
+        return
+      }
+
+      if(!_.isUuid(versionId)) {
+        error_.bundle(res, 'invalid version id', 400, id)
+        return
+      }
+
+      lib.versionById(id, versionId)
+      .then(res.json.bind(res))
+      .catch(error_.Handler(res))
+    },
     post: function (req, res) {
       lib.create(req.body)
       .then(res.json.bind(res))

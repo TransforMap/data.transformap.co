@@ -76,12 +76,26 @@ module.exports = function (typeName, model) {
       .then(Version.parseCurrentVersion)
     },
     versionsById: function (id) {
-      return db.viewByKeys('versionsById', [[typeName, id]])
+      const startKey = [typeName, id]
+      const endKey = [typeName, id, {}]
+
+      return db.viewByKeyRange('versionsById', startKey, endKey)
       .then(_.Log('versionsById'))
       .then(rejectEmptyCollection404)
       .then(function (resultArray) {
         return convertArrayToFeatureCollection(resultArray, typeName, `${id}/versions`)
       })
+    },
+    versionById: function (id, versionId) {
+      const startKey = [typeName, id, versionId]
+      const endKey = [typeName, id, versionId]
+
+      return db.viewByKeyRange('versionsById', startKey, endKey)
+      .then(_.Log('viewByKeyRangeResult'))
+      .then(function (result) { return result[0] } )
+      .then(_.Log('extractedItem'))
+      .then(reject404)
+      .then(Version.parseCurrentVersion)
     },
     update: function (data, journalId) {
       // same as in create
