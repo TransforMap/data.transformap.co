@@ -32,6 +32,26 @@ module.exports = function (db, designName) {
     .then(parseNanoResponse)
   }
 
+  const viewDesc = function (viewName) {
+    return db.view(designName, viewName, {
+      include_docs: true,
+      descending: true
+    })
+    .then(parseNanoResponse)
+    .then(parseDocs)
+    //.then(_.Log(`view ${designName} ${viewName}`))
+  }
+
+  const viewDescWithLimit = function (viewName, limit) {
+    return db.view(designName, viewName, {
+      include_docs: true,
+      descending: true,
+      limit: limit
+    })
+    .then(parseNanoResponse)
+    .then(parseDocs)
+  }
+
   return {
     get: get,
     post: insert,
@@ -55,7 +75,9 @@ module.exports = function (db, designName) {
       .then(_.Log('viewByKey'))
     },
     viewByKeys: viewByKeys,
-    viewByKeyRange: viewByKeyRange
+    viewByKeyRange: viewByKeyRange,
+    viewDesc: viewDesc,
+    viewDescWithLimit: viewDescWithLimit
   }
 }
 

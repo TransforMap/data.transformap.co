@@ -168,7 +168,7 @@ const reject404 = function (doc) {
   if (!_.isPlainObject(doc)) {
     throw error_.new('no object with this id in db', 404, doc)
   }
-  return docType
+  return doc
 }
 
 const rejectEmptyCollection404 = function (doc) {
