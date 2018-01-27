@@ -15,8 +15,12 @@ module.exports = function (typeName, model) {
       .then(_.Log(`${typeName} byId`))
     },
     filter: function(filter_string) {
+      const uriBuilder = function (item, baseURI) {
+        return `${baseURI}/${item.journal}`
+      }
+
       const convertArrayToTypeFeatureCollection = function (data_array) {
-        return convertArrayToFeatureCollection(data_array,typeName,filter_string)
+        return convertArrayToFeatureCollection(data_array,typeName,filter_string, uriBuilder)
       }
       if(filter_string == '') {
         return db.viewByKeyRange('currentVersionById', [typeName, '0'], [typeName, 'z'])
@@ -76,15 +80,22 @@ module.exports = function (typeName, model) {
       .then(Version.parseCurrentVersion)
     },
     versionsById: function (id) {
+      const uriBuilder = function (item, baseURI) {
+        return `${baseURI}/${item.journal}/version/${item._versionId}`
+      }
+
+      const convertArrayToVersionTypeFeatureCollection = function (resultArray) {
+        return convertArrayToFeatureCollection(resultArray, typeName, `${id}/versions`, uriBuilder )
+      }
+
       const startKey = [typeName, id]
       const endKey = [typeName, id, {}]
 
       return db.viewByKeyRange('versionsById', startKey, endKey)
       .then(_.Log('versionsById'))
       .then(rejectEmptyCollection404)
-      .then(function (resultArray) {
-        return convertArrayToVersionFeatureCollection(resultArray, typeName, `${id}/versions`)
-      })
+      .then(convertArrayToVersionTypeFeatureCollection)
+      .then(_.Log(`${typeName} versions for ${id}`))
     },
     versionById: function (id, versionId) {
       const startKey = [typeName, id, versionId]
@@ -178,45 +189,24 @@ const updateJournal = function (data, journalId) {
   })
 }
 
-const convertArrayToFeatureCollection = function (data_array, item_type, query_string) {
+const convertArrayToFeatureCollection = function (data_array, item_type, query_string, uri_builder) {
   const hostname = 'https://data.transformap.co'
   var feature_collection = {
     'type': 'FeatureCollection',
-    'source': hostname + '/' + item_type + '/' + query_string,
-    'license': 'Public Domain',              // only temporarly here
-    'features': []
-  }
-  data_array.forEach( item => {
-    var feature = item.data
-    if(!feature.properties)
-      feature.properties = {}
-    feature.properties._uri = hostname + '/' + item_type + '/' + item.journal
-    feature.properties._timestamp = item.timestamp
-    feature.properties._id = item.journal
-    feature.properties._verionId = item._id
-    feature_collection.features.push(feature)
-  })
-  return feature_collection
-}
-
-const convertArrayToVersionFeatureCollection = function(data_array, item_type, query_string) {
-  const hostname = 'https://data.transformap.co'
-  var feature_collection = {
-    'type': 'FeatureCollection',
-    'source': hostname + '/' + item_type + '/' + query_string,
+    'source': `${hostname}/${item_type}/${query_string}`,
     'license': 'Public Domain',
     'features': []
   }
 
-  data_array.forEach( item => {
+  feature_collection.features = data_array.map( item => {
     var feature = item.data
     if(!feature.properties)
       feature.properties = {}
-    feature.properties._uri = `${hostname}/${item_type}/${item.journal}/version/${item._id}`
     feature.properties._timestamp = item.timestamp
     feature.properties._id = item.journal
     feature.properties._versionId = item._versionId
-    feature_collection.features.push(feature)
+    feature.properties._uri = uri_builder(item, `${hostname}/${item_type}`)
+    return feature;
   })
 
   return feature_collection
