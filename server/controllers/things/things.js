@@ -39,6 +39,9 @@ const typeRoutes = function (typeName) {
     put: controller.put,
     delete: controller.delete
   }
+  routes[`${typeName}/:id/versions`] = {
+    get: controller.getVersions
+  }
 
   return routes
 }

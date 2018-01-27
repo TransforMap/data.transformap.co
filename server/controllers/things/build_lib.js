@@ -75,6 +75,14 @@ module.exports = function (typeName, model) {
       .then(reject404)
       .then(Version.parseCurrentVersion)
     },
+    versionsById: function (id) {
+      return db.viewByKeys('versionsById', [[typeName, id]])
+      .then(_.Log('versionsById'))
+      .then(rejectEmptyCollection404)
+      .then(function (resultArray) {
+        return convertArrayToFeatureCollection(resultArray, typeName, `${id}/versions`)
+      })
+    },
     update: function (data, journalId) {
       // same as in create
       try {
@@ -133,6 +141,13 @@ module.exports = function (typeName, model) {
 
 const reject404 = function (doc) {
   if (!_.isPlainObject(doc)) {
+    throw error_.new('no object with this id in db', 404, doc)
+  }
+  return doc
+}
+
+const rejectEmptyCollection404 = function (doc) {
+  if(!(doc instanceof Array) || doc.length < 1) {
     throw error_.new('no object with this id in db', 404, doc)
   }
   return doc

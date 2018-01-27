@@ -14,6 +14,23 @@ const delete_ = (url) => breq.delete(url).then(_.property('body'))
 const endpoint = CONFIG.server.url() + '/place'
 const placeNewDoc = require('../fixtures/place-new-to-create-for-api')
 
+const createJournalWithTwoVersions = function (doc, callback) {
+  post(endpoint, doc)
+  .then(function (createResponse) {
+    get(`${endpoint}/${createResponse.id}`)
+    .then(function (firstVersion) {
+      doc.properties.name += ' - Version 2 '
+      put(`${endpoint}/${firstVersion._id}`, doc)
+      .then(function (updateResponse) {
+        get(`${endpoint}/${updateResponse.id}`)
+        .then(function (secondVersion) {
+          callback(createResponse.id, firstVersion, secondVersion)
+        })
+      })
+    })
+  })
+}
+
 describe('/place', function () {
   describe('POST doc', function () {
     it('should return the doc with journal id', function (done) {
@@ -57,6 +74,34 @@ describe('/place', function () {
           a.should.equal(b)
           done()
         })
+      })
+    })
+  })
+  describe('GET id/versions', function () {
+    it('should return a feature collection', function (done) {
+      createJournalWithTwoVersions(placeNewDoc, function (journalId, firstVersion, secondVersion) {
+        get(`${endpoint}/${journalId}/versions`)
+        .then( function (versionsResponse) {
+          versionsResponse.type.should.equal('FeatureCollection')
+          done()
+        })
+      })
+    })
+    it('should return all versions of that journal', function(done) {
+      createJournalWithTwoVersions(placeNewDoc, function (journalId, firstVersion, secondVersion) {
+        get(`${endpoint}/${journalId}/versions`)
+        .then( function (versionsResponse) {
+          versionsResponse.features.length.should.equal(2)
+          done()
+        })
+      })
+    })
+    it('should raise an error on non existing UUID', function(done) {
+      get(`${endpoint}/76100b453de20da6744eac86700294b8/versions`)
+      .then( _.Log('error response'))
+      .then( function (errorResponse) {
+        errorResponse.status.should.equal('no object with this id in db')
+        done()
       })
     })
   })
