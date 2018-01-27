@@ -31,6 +31,18 @@ module.exports = function () {
       lib.latest(count)
       .then(res.json.bind(res))
       .then(error_.Handler(res))
+    },
+    latestSince: function (req, res) {
+      const pointInTime = parseInt(req.params.pointInTime)
+
+      if(isNaN(pointInTime)) {
+        error_.bundle(res, 'invalid point in time', 400, pointInTime)
+        return;
+      }
+
+      lib.latestSince(pointInTime)
+      .then(res.json.bind(res))
+      .then(error_.Handler(res))
     }
   }
 }

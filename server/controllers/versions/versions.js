@@ -16,6 +16,9 @@ module.exports = {
       },
       'versions/latest/:count': {
         get: cntrlr.latest
+      },
+      'versions/since/:pointInTime': {
+        get: cntrlr.latestSince
       }
     }
   }

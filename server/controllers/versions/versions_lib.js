@@ -29,6 +29,12 @@ module.exports = function () {
       return db.viewDescWithLimit('byTimestamp', count)
       .then(_.Log(`byTimestamp with limit=${count}`))
       .then(convertArrayToTypeFeatureCollection)
+    },
+    latestSince: function(upTo) {
+      const now = (+ new Date())
+      return db.viewByKeyRange('byTimestamp', upTo, now)
+      .then(_.Log(`byTimestamp since ${ new Date(upTo).toUTCString()}`))
+      .then(convertArrayToTypeFeatureCollection)
     }
 
   }

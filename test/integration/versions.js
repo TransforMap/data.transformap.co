@@ -109,3 +109,37 @@ describe('/versions/:id', function () {
     })
   })
 })
+
+describe('/versions/since/:pointInTime', function () {
+  describe('GET', function () {
+    it('should return 400 with invalid point in time', function (done) {
+      breq.get(`${versionsEndpoint}/since/invalidPointInTime`)
+      .then(function (res) {
+        res.statusCode.should.equal(400)
+        done()
+      })
+    })
+    it('should return a feature collection', function (done) {
+      const pointInTime = (+new Date())
+      withTwoVersions(function () {
+        get(`${versionsEndpoint}/since/${pointInTime}`)
+        .then(function (result) {
+          result.type.should.equal('FeatureCollection')
+          done()
+        })
+      })
+    })
+    it('should return only versions with timestamp > pointInTime', function (done) {
+      const pointInTime = (+new Date())
+      withTwoVersions(function () {
+        get(`${versionsEndpoint}/since/${pointInTime}`)
+        .then(function (result) {
+          result.features.forEach((feature) => {
+            feature.properties._timestamp.should.be.aboveOrEqual(pointInTime)
+          })
+          done()
+        })
+      })
+    })
+  })
+})

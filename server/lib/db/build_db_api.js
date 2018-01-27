@@ -12,15 +12,16 @@ module.exports = function (db, designName) {
     .then(parseDocs)
     .then(_.Log(`viewByKeys ${designName} ${viewName} ${keys}`))
   }
-  const viewByKeyRange = function (viewName, startKey, endKey) {
+  const viewByKeyRange = function (viewName, startKey, endKey, desc = false) {
     return db.view(designName, viewName, {
       startkey: startKey,
       endkey: endKey,
-      include_docs: true
+      include_docs: true,
+      descending: desc
     })
     .then(parseNanoResponse)
     .then(parseDocs)
-    .then(_.Log(`viewByKeyRange ${designName} ${viewName} ${startKey}-${endKey}`))
+    .then(_.Log(`viewByKeyRange ${designName} ${viewName} ${startKey}-${endKey} descending - ${desc}`))
   }
 
   const get = function (id) {
