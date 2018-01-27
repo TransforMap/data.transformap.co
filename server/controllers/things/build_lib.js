@@ -179,6 +179,7 @@ const convertArrayToFeatureCollection = function (data_array, item_type, query_s
     feature.properties._uri = hostname + '/' + item_type + '/' + item.journal
     feature.properties._timestamp = item.timestamp
     feature.properties._id = item.journal
+    feature.properties._verionId = item._id
     feature_collection.features.push(feature)
   })
   return feature_collection

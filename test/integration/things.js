@@ -65,6 +65,8 @@ describe('/place', function () {
           body2._id.should.equal(body1.id)
           // copying the id to make comparison simpler
           placeNewDoc._id = body2._id
+          // removing versionId to make comparison simpler
+          delete body2._versionId
           const b = JSON.stringify(placeNewDoc)
           const a = JSON.stringify(body2)
           if (a !== b) {
@@ -148,6 +150,8 @@ describe('/place', function () {
             body3._id.should.equal(body2.id)
             // copying the id to make comparison simpler
             placeNewDoc._id = body3._id
+            // deleting the versionId to make comparison simpler
+            delete body3._versionId
             const b = JSON.stringify(placeNewDoc)
             const a = JSON.stringify(body3)
             a.should.equal(b)

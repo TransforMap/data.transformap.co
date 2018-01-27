@@ -62,7 +62,8 @@ describe('version model', function () {
       versionDoc.data = testdata
       const datastring = JSON.stringify(testdata)
       var retVal = Version.parseCurrentVersion(versionDoc)
-      delete retVal._id // only thing added by parseCurrentVersion on default
+      delete retVal._id // added by parseCurrentVersion on default
+      delete retVal._versionId // added by parseCurrentVersion on default
       const retValDataString = JSON.stringify(retVal)
       retValDataString.should.equal(datastring)
       done()
@@ -71,6 +72,12 @@ describe('version model', function () {
       const versionDoc = createValidVersionDoc(someJournalId)
       const retVal = Version.parseCurrentVersion(versionDoc)
       retVal._id.should.equal(someJournalId)
+      done()
+    })
+    it('should add the versionId - atrribute according to the id of the versionDoc', function (done) {
+      const versionDoc = createValidVersionDoc(someJournalId)
+      const retVal = Version.parseCurrentVersion(versionDoc)
+      retVal._versionId.should.equal(versionDoc._id)
       done()
     })
     it('should add the _deleted - flag if the deleted-status is set in the versionDoc', function (done) {
