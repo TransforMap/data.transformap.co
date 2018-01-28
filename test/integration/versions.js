@@ -63,36 +63,7 @@ describe('/versions', function () {
       })
     })
   })
-})
-
-describe('/versions/latest/:limit', function () {
-  it('should return a feature collection', function (done) {
-    get(`${versionsEndpoint}/latest/5`)
-    .then(function (result) {
-      result.type.should.equal('FeatureCollection')
-      done()
-    })
-  })
-  it('should list versions newest to oldest', function (done) {
-    withTwoVersions(function () {
-      get(`${versionsEndpoint}/latest/1`)
-      .then(function (result) {
-        result.features.length.should.be.belowOrEqual(5)
-        done()
-      })
-    })
-  })
-  it('should return 400 if :limit is not a number', function (done) {
-    breq.get(`${versionsEndpoint}/latest/notanumber`)
-    .then(function (res) {
-      res.statusCode.should.equal(400)
-      done()
-    })
-  })
-})
-
-describe('/versions/:id', function () {
-  describe('GET', function () {
+  describe('GET id', function () {
     it('should be able to get a version', function (done) {
       withCreatedVersion(placeNewDoc, function (thingObject, versionObject) {
         thingObject._versionId.should.equal(versionObject._versionId)
@@ -115,10 +86,32 @@ describe('/versions/:id', function () {
       })
     })
   })
-})
-
-describe('/versions/since/:pointInTime', function () {
-  describe('GET', function () {
+  describe('GET latest/:limit', function () {
+    it('should return a feature collection', function (done) {
+      get(`${versionsEndpoint}/latest/5`)
+      .then(function (result) {
+        result.type.should.equal('FeatureCollection')
+        done()
+      })
+    })
+    it('should list versions newest to oldest', function (done) {
+      withTwoVersions(function () {
+        get(`${versionsEndpoint}/latest/1`)
+        .then(function (result) {
+          result.features.length.should.be.belowOrEqual(5)
+          done()
+        })
+      })
+    })
+    it('should return 400 if :limit is not a number', function (done) {
+      breq.get(`${versionsEndpoint}/latest/notanumber`)
+      .then(function (res) {
+        res.statusCode.should.equal(400)
+        done()
+      })
+    })
+  })
+  describe('GET since/:pointInTime', function () {
     it('should return 400 with invalid point in time', function (done) {
       breq.get(`${versionsEndpoint}/since/invalidPointInTime`)
       .then(function (res) {
