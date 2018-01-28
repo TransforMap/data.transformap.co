@@ -35,7 +35,7 @@ module.exports = function () {
 
       lib.latest(count)
       .then(res.json.bind(res))
-      .then(error_.Handler(res))
+      .catch(error_.Handler(res))
     },
     latestSince: function (req, res) {
       const pointInTime = parseInt(req.params.pointInTime)
@@ -47,7 +47,7 @@ module.exports = function () {
 
       lib.latestSince(pointInTime)
       .then(res.json.bind(res))
-      .then(error_.Handler(res))
+      .catch(error_.Handler(res))
     }
   }
 }
