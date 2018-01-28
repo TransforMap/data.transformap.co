@@ -3,10 +3,10 @@ const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const error_ = __.require('lib', 'error')
 
-const lib_ = require('./versions_lib')
+const libraryBuilder = require('./build_lib')
 
 module.exports = function () {
-  const lib = lib_()
+  const lib = libraryBuilder()
 
   return {
     get: function (req, res) {

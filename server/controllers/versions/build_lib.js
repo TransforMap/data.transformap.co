@@ -9,6 +9,7 @@ module.exports = function () {
   const uriBuilder = function (item, baseUri) {
     return `${baseUri}/${item._versionId}`
   }
+  
   const convertArrayToTypeFeatureCollection = function (data_array) {
     return convertArrayToFeatureCollection(data_array, 'version', '', uriBuilder )
   }

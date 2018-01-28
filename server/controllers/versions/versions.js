@@ -2,23 +2,25 @@ const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 
-const controller = require('./versions_controller')
-const cntrlr = controller()
+const controllerBuilder = require('./build_controller')
+const controller = controllerBuilder()
 
 module.exports = {
+
+
   generateRoutes: function () {
     return {
       'versions': {
-        get: cntrlr.all
+        get: controller.all
       },
       'versions/:id': {
-        get: cntrlr.get
+        get: controller.get
       },
       'versions/latest/:count': {
-        get: cntrlr.latest
+        get: controller.latest
       },
       'versions/since/:pointInTime': {
-        get: cntrlr.latestSince
+        get: controller.latestSince
       }
     }
   }
