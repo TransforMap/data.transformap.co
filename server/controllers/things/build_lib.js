@@ -7,6 +7,7 @@ const Version = require('./models/commons/version')
 const versions_ = require('./lib/versions')
 const promises_ = __.require('lib', 'promises')
 const error_ = __.require('lib', 'error')
+const libUtils = require('../lib_utils.js')
 
 module.exports = function (typeName, model) {
   return {
@@ -15,13 +16,14 @@ module.exports = function (typeName, model) {
       .then(_.Log(`${typeName} byId`))
     },
     filter: function(filter_string) {
-      const uriBuilder = function (item, baseURI) {
-        return `${baseURI}/${item.journal}`
+      const uriBuilder = function (item, hostname, item_type) {
+        return `${hostname}/${item_type}/${item.journal}`
       }
 
       const convertArrayToTypeFeatureCollection = function (data_array) {
-        return convertArrayToFeatureCollection(data_array,typeName,filter_string, uriBuilder)
+        return libUtils.convertArrayToFeatureCollection(data_array,typeName,`/${filter_string}`, uriBuilder)
       }
+
       if(filter_string == '') {
         return db.viewByKeyRange('currentVersionById', [typeName, '0'], [typeName, 'z'])
         .then(convertArrayToTypeFeatureCollection)
@@ -76,16 +78,16 @@ module.exports = function (typeName, model) {
       // return a document that doesn't belong to the required type
       return db.viewByKey('currentVersionById', [typeName, id])
       .then(_.Log('currentVersionById'))
-      .then(reject404)
+      .then(libUtils.reject404)
       .then(Version.parseCurrentVersion)
     },
     versionsById: function (id) {
-      const uriBuilder = function (item, baseURI) {
-        return `${baseURI}/${item.journal}/version/${item._versionId}`
+      const uriBuilder = function (item, hostname, item_type) {
+        return `${hostname}/${item_type}/${item.journal}/version/${item._versionId}`
       }
 
       const convertArrayToVersionTypeFeatureCollection = function (resultArray) {
-        return convertArrayToFeatureCollection(resultArray, typeName, `${id}/versions`, uriBuilder )
+        return libUtils.convertArrayToFeatureCollection(resultArray, typeName, `/${id}/versions`, uriBuilder )
       }
 
       const startKey = [typeName, id]
@@ -93,7 +95,7 @@ module.exports = function (typeName, model) {
 
       return db.viewByKeyRange('versionsById', startKey, endKey)
       .then(_.Log('versionsById'))
-      .then(rejectEmptyCollection404)
+      .then(libUtils.rejectEmptyCollection404)
       .then(convertArrayToVersionTypeFeatureCollection)
       .then(_.Log(`${typeName} versions for ${id}`))
     },
@@ -105,7 +107,7 @@ module.exports = function (typeName, model) {
       .then(_.Log('viewByKeyRangeResult'))
       .then(function (result) { return result[0] } )
       .then(_.Log('extractedItem'))
-      .then(reject404)
+      .then(libUtils.reject404)
       .then(Version.parseCurrentVersion)
     },
     update: function (data, journalId) {
@@ -121,7 +123,7 @@ module.exports = function (typeName, model) {
       }
       return db.viewByKey('byId', [typeName, journalId])
       // DB will return just 'undefined' if nothing is found
-      .then(reject404)
+      .then(libUtils.reject404)
       // Insert version object into journal.
       // journalId and data are already available
       // but we need to wait for the validation
@@ -164,20 +166,6 @@ module.exports = function (typeName, model) {
   }
 }
 
-const reject404 = function (doc) {
-  if (!_.isPlainObject(doc)) {
-    throw error_.new('no object with this id in db', 404, doc)
-  }
-  return doc
-}
-
-const rejectEmptyCollection404 = function (doc) {
-  if(!(doc instanceof Array) || doc.length < 1) {
-    throw error_.new('no object with this id in db', 404, doc)
-  }
-  return doc
-}
-
 const updateJournal = function (data, journalId) {
   // create a new version associated to this journal
   return versions_.create(journalId, data)
@@ -187,27 +175,4 @@ const updateJournal = function (data, journalId) {
       return Journal.update(journalDoc, newVersionObject)
     })
   })
-}
-
-const convertArrayToFeatureCollection = function (data_array, item_type, query_string, uri_builder) {
-  const hostname = 'https://data.transformap.co'
-  var feature_collection = {
-    'type': 'FeatureCollection',
-    'source': `${hostname}/${item_type}/${query_string}`,
-    'license': 'Public Domain',
-    'features': []
-  }
-
-  feature_collection.features = data_array.map( item => {
-    var feature = item.data
-    if(!feature.properties)
-      feature.properties = {}
-    feature.properties._timestamp = item.timestamp
-    feature.properties._id = item.journal
-    feature.properties._versionId = item._versionId
-    feature.properties._uri = uri_builder(item, `${hostname}/${item_type}`)
-    return feature;
-  })
-
-  return feature_collection
 }
