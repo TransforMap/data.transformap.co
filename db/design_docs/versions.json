@@ -1,4 +1,9 @@
 {
     "_id": "_design/versions",
-    "language": "javascript"
+    "language": "javascript",
+    "views": {
+       "byTimestamp": {
+           "map": "function(doc) {\n  if (doc.context === 'version') {\n    emit(doc.timestamp, doc)\n  }\n}"
+       }
+   }
 }

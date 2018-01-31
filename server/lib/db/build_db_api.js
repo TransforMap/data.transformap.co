@@ -12,15 +12,16 @@ module.exports = function (db, designName) {
     .then(parseDocs)
     .then(_.Log(`viewByKeys ${designName} ${viewName} ${keys}`))
   }
-  const viewByKeyRange = function (viewName, startKey, endKey) {
+  const viewByKeyRange = function (viewName, startKey, endKey, desc = false) {
     return db.view(designName, viewName, {
       startkey: startKey,
       endkey: endKey,
-      include_docs: true
+      include_docs: true,
+      descending: desc
     })
     .then(parseNanoResponse)
     .then(parseDocs)
-    .then(_.Log(`viewByKeyRange ${designName} ${viewName} ${startKey}-${endKey}`))
+    .then(_.Log(`viewByKeyRange ${designName} ${viewName} ${startKey}-${endKey} descending - ${desc}`))
   }
 
   const get = function (id) {
@@ -30,6 +31,26 @@ module.exports = function (db, designName) {
   const insert = function (doc) {
     return db.insert(doc)
     .then(parseNanoResponse)
+  }
+
+  const viewDesc = function (viewName) {
+    return db.view(designName, viewName, {
+      include_docs: true,
+      descending: true
+    })
+    .then(parseNanoResponse)
+    .then(parseDocs)
+    //.then(_.Log(`view ${designName} ${viewName}`))
+  }
+
+  const viewDescWithLimit = function (viewName, limit) {
+    return db.view(designName, viewName, {
+      include_docs: true,
+      descending: true,
+      limit: limit
+    })
+    .then(parseNanoResponse)
+    .then(parseDocs)
   }
 
   return {
@@ -55,7 +76,9 @@ module.exports = function (db, designName) {
       .then(_.Log('viewByKey'))
     },
     viewByKeys: viewByKeys,
-    viewByKeyRange: viewByKeyRange
+    viewByKeyRange: viewByKeyRange,
+    viewDesc: viewDesc,
+    viewDescWithLimit: viewDescWithLimit
   }
 }
 

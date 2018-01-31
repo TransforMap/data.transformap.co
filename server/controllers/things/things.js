@@ -41,6 +41,12 @@ const typeRoutes = function (typeName) {
     put: [ _passport.ensureAuthenticated, controller.put ],
     delete: [ _passport.ensureAuthenticated, controller.delete ]
   }
+  routes[`${typeName}/:id/versions`] = {
+    get: controller.getVersions
+  }
+  routes[`${typeName}/:id/version/:versionId`] = {
+    get: controller.getVersion
+  }
 
   return routes
 }

@@ -14,6 +14,23 @@ const delete_ = (url) => breq.delete(url).then(_.property('body'))
 const endpoint = CONFIG.server.url() + '/place'
 const placeNewDoc = require('../fixtures/place-new-to-create-for-api')
 
+const createJournalWithTwoVersions = function (doc, callback) {
+  post(endpoint, doc)
+  .then(function (createResponse) {
+    get(`${endpoint}/${createResponse.id}`)
+    .then(function (firstVersion) {
+      doc.properties.name += ' - Version 2'
+      put(`${endpoint}/${firstVersion._id}`, doc)
+      .then(function (updateResponse) {
+        get(`${endpoint}/${updateResponse.id}`)
+        .then(function (secondVersion) {
+          callback(createResponse.id, firstVersion, secondVersion)
+        })
+      })
+    })
+  })
+}
+
 describe('/place', function () {
   describe('POST doc', function () {
     it('should return the doc with journal id', function (done) {
@@ -48,6 +65,8 @@ describe('/place', function () {
           body2._id.should.equal(body1.id)
           // copying the id to make comparison simpler
           placeNewDoc._id = body2._id
+          // removing versionId to make comparison simpler
+          delete body2._versionId
           const b = JSON.stringify(placeNewDoc)
           const a = JSON.stringify(body2)
           if (a !== b) {
@@ -55,6 +74,96 @@ describe('/place', function () {
             _.log('returned', b)
           }
           a.should.equal(b)
+          done()
+        })
+      })
+    })
+  })
+  describe('GET id/versions', function () {
+    it('should return a feature collection', function (done) {
+      createJournalWithTwoVersions(placeNewDoc, function (journalId, firstVersion, secondVersion) {
+        get(`${endpoint}/${journalId}/versions`)
+        .then(function (versionsResponse) {
+          versionsResponse.type.should.equal('FeatureCollection')
+          done()
+        })
+      })
+    })
+    it('should return all versions of that journal', function (done) {
+      createJournalWithTwoVersions(placeNewDoc, function (journalId, firstVersion, secondVersion) {
+        get(`${endpoint}/${journalId}/versions`)
+        .then(function (versionsResponse) {
+          versionsResponse.features.length.should.equal(2)
+          done()
+        })
+      })
+    })
+    it('should raise an error on non existing UUID', function (done) {
+      get(`${endpoint}/76100b453de20da6744eac86700294b8/versions`)
+      .then(function (errorResponse) {
+        errorResponse.status.should.equal('no object with this id in db')
+        done()
+      })
+    })
+  })
+  describe('GET id/version/versionId', function () {
+    it('should return the version of id identifier by versionId', function (done) {
+      createJournalWithTwoVersions(placeNewDoc, function (journalId, firstVersion, secondVersion) {
+        get(`${endpoint}/${journalId}/version/${firstVersion._versionId}`)
+        .then(function (versionGetResponse) {
+          firstVersion._versionId.should.equal(versionGetResponse._versionId)
+          JSON.stringify(firstVersion).should.equal(JSON.stringify(versionGetResponse))
+          done()
+        })
+      })
+    })
+    it('should not retreive the most recent version', function (done) {
+      createJournalWithTwoVersions(placeNewDoc, function (journalId, firstVersion, secondVersion) {
+        get(`${endpoint}/${journalId}`)
+        .then(function (latestVersionResponse) {
+          get(`${endpoint}/${journalId}/version/${firstVersion._versionId}`)
+          .then(function (getVersionResponse) {
+            latestVersionResponse.properties.name
+              .should.equal(secondVersion.properties.name)
+            getVersionResponse.properties.name
+              .should.equal(firstVersion.properties.name)
+            done()
+          })
+        })
+      })
+    })
+    it('should return 400 for an invlaid id', function (done) {
+      breq.get(`${endpoint}/someInvalidId/version/someInvalidVersionId`)
+      .then(function (res) {
+        res.statusCode.should.equal(400)
+        res.body.status.should.equal('invalid id')
+        done()
+      })
+    })
+    it('should return 400 for an invalid version id', function (done) {
+      breq.get(`${endpoint}/76100b453de20da6744eac86700294b8/version/someInvalidVersionId`)
+      .then(function (res) {
+        res.statusCode.should.equal(400)
+        res.body.status.should.equal('invalid version id')
+        done()
+      })
+    })
+    it('should return 404 for an unknown id', function (done) {
+      createJournalWithTwoVersions(placeNewDoc, function (journalId, firstVersion, secondVersion) {
+        breq.get(`${endpoint}/76100b453de20da6744eac86700294b8/version/${firstVersion._versionId}`)
+        .then(function (res) {
+          res.statusCode.should.equal(404)
+          res.body.status.should.equal('no object with this id in db')
+          done()
+        })
+      })
+    })
+    it('should return 404 for an unknown versionId', function (done) {
+      createJournalWithTwoVersions(placeNewDoc, function (journalId, firstVersion, secondVersion) {
+        breq.get(`${endpoint}/${journalId}/version/76100b453de20da6744eac86700294b8`)
+        .then(function (res) {
+          res.statusCode.should.equal(404)
+          res.body.status.should.equal('no object with this id in db')
           done()
         })
       })
@@ -103,6 +212,8 @@ describe('/place', function () {
             body3._id.should.equal(body2.id)
             // copying the id to make comparison simpler
             placeNewDoc._id = body3._id
+            // deleting the versionId to make comparison simpler
+            delete body3._versionId
             const b = JSON.stringify(placeNewDoc)
             const a = JSON.stringify(body3)
             a.should.equal(b)

@@ -5,6 +5,7 @@ const things = require('./things/things')
 const users = require('./users/routes.js')
 const root = require('./root/root')
 const _passport = require('./../middlewares/passport')
+const versions = require('./versions/versions')
 
 const routes = {
   'hello': {
@@ -35,6 +36,7 @@ const routes = {
 
 _.extend(routes, things.generateRoutes())
 _.extend(routes, users.generateRoutes())
+_.extend(routes, versions.generateRoutes())
 _.extend(routes, root.generateHypermedia(routes))
 
 module.exports = _.log(routes, 'routes')
