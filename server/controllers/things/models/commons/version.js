@@ -29,6 +29,8 @@ const ThingVersion = {
     // while it's just the last version
     data._id = versionDoc.journal
     data._versionId = versionDoc._id
+    data._changed = versionDoc.timestamp
+    data._created = versionDoc.timestamp
 
     if(versionDoc.status && versionDoc.status.deleted === true)
       data._deleted = true
