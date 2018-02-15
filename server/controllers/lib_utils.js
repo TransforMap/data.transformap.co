@@ -3,6 +3,45 @@ const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const error_ = __.require('lib', 'error')
 
+const db = __.require('lib', 'db/db')('things', 'journals')
+const Promise = require('bluebird')
+
+const compact = function (array) {
+  var callback = {}
+  array.rows.forEach(function (e) {
+    callback[e.id] = e.value
+  })
+  return callback
+}
+
+const unpack = function (array) {
+  return array[0]
+}
+
+const setCreatedTimestamps = function (index, featureArray) {
+  return Promise.map(featureArray, (feature) => this.setCreatedTimestamp(feature, index))
+}
+
+const setCreatedTimestamp = function (feature, index) {
+  feature.created = index[feature.created]
+  return feature
+}
+
+const setCreatedIds = function (index, featureArray) {
+  return Promise.map(featureArray, (feature) => this.setCreatedId(feature, index))
+}
+
+const setCreatedId = function (feature, index) {
+  feature.created = index[feature.journal]
+  return feature
+}
+
+const appendCreatedVersions = function (featureArray) {
+  return db.view('firstVersionById')
+  .then(compact)
+  .then((data) => this.setCreatedIds(data, featureArray))
+}
+
 module.exports = {
   reject404: function (doc) {
     if (!_.isPlainObject(doc)) {
@@ -36,6 +75,7 @@ module.exports = {
         feature.properties = {}
       }
       feature.properties._timestamp = item.timestamp
+      feature.properties._created = item.created
       feature.properties._id = item.journal
       feature.properties._version = item._id
       feature.properties._uri = uri_builder(item, hostname, item_type)
@@ -44,5 +84,14 @@ module.exports = {
     })
 
     return feature_collection
-  }
+  },
+
+  appendCreatedVersions: appendCreatedVersions,
+  setCreatedId: setCreatedId,
+  setCreatedIds: setCreatedIds,
+  setCreatedTimestamp: setCreatedTimestamp,
+  setCreatedTimestamps: setCreatedTimestamps,
+  compact: compact,
+  unpack: unpack
+
 }

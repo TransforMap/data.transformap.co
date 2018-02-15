@@ -13,6 +13,9 @@
        },
        "versionsById": {
            "map": "function(doc) {\n  if (doc.context === 'journal') {\n    doc.versions.forEach( function(versionId) {\n      emit([doc.type, doc._id, versionId], {'_id': versionId} )\n    })\n  }\n}"
+       },
+       "firstVersionById": {
+           "map": "function(doc) {\n  if (doc.context === 'journal' && doc.type === 'place' && doc.data && doc.data.properties && ( ! (doc.status && doc.status.deleted) ) ) {\n    var firstVersionId = doc.versions[0]\n    emit('firstVersionId', firstVersionId)\n  }\n}"
        }
    }
 }

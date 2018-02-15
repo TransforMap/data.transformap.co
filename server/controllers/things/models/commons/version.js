@@ -30,10 +30,9 @@ const ThingVersion = {
     data._id = versionDoc.journal
     data._version = versionDoc._id
     data._timestamp = versionDoc.timestamp
-    data._created = versionDoc.timestamp
+    data._created = versionDoc.created
 
-    if(versionDoc.status && versionDoc.status.deleted === true)
-      data._deleted = true
+    if (versionDoc.status && versionDoc.status.deleted === true) { data._deleted = true }
     return data
   }
 }
