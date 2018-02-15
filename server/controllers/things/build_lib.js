@@ -83,7 +83,7 @@ module.exports = function (typeName, model) {
     },
     versionsById: function (id) {
       const uriBuilder = function (item, hostname, item_type) {
-        return `${hostname}/${item_type}/${item.journal}/version/${item._versionId}`
+        return `${hostname}/${item_type}/${item.journal}/version/${item._id}`
       }
 
       const convertArrayToVersionTypeFeatureCollection = function (resultArray) {

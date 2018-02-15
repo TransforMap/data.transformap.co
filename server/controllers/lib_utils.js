@@ -37,7 +37,7 @@ module.exports = {
       }
       feature.properties._timestamp = item.timestamp
       feature.properties._id = item.journal
-      feature.properties._versionId = item._versionId
+      feature.properties._version = item._id
       feature.properties._uri = uri_builder(item, hostname, item_type)
 
       return feature
