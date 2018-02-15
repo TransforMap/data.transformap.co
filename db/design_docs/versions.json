@@ -4,6 +4,9 @@
     "views": {
        "byTimestamp": {
            "map": "function(doc) {\n  if (doc.context === 'version') {\n    emit(doc.timestamp, doc)\n  }\n}"
+       },
+       "timestamps": {
+           "map": "function(doc) {\n  if (doc.context === 'version') {\n    emit(doc.journal, doc.timestamp )\n  }\n}"
        }
    }
 }

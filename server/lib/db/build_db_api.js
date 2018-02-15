@@ -33,6 +33,13 @@ module.exports = function (db, designName) {
     .then(parseNanoResponse)
   }
 
+  const view = function (viewName) {
+    return db.view(designName, viewName, {
+      include_docs: false
+    })
+    .then(parseNanoResponse)
+  }
+
   const viewDesc = function (viewName) {
     return db.view(designName, viewName, {
       include_docs: true,
@@ -40,7 +47,7 @@ module.exports = function (db, designName) {
     })
     .then(parseNanoResponse)
     .then(parseDocs)
-    //.then(_.Log(`view ${designName} ${viewName}`))
+    // .then(_.Log(`view ${designName} ${viewName}`))
   }
 
   const viewDescWithLimit = function (viewName, limit) {
@@ -70,11 +77,13 @@ module.exports = function (db, designName) {
       // TODO: catch insert errors to retry once
       // to address possible conflicts
     },
+
     viewByKey: function (viewName, key) {
       return viewByKeys(viewName, [key])
       .then(parseFirst)
       .then(_.Log('viewByKey'))
     },
+    view: view,
     viewByKeys: viewByKeys,
     viewByKeyRange: viewByKeyRange,
     viewDesc: viewDesc,

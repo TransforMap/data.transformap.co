@@ -2,6 +2,7 @@ const CONFIG = require('config')
 const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const db = __.require('lib', 'db/db')('things', 'journals')
+const Versions = __.require('lib', 'db/db')('things', 'versions')
 const Journal = require('./models/commons/journal')
 const Version = require('./models/commons/version')
 const versions_ = require('./lib/versions')
@@ -9,42 +10,51 @@ const promises_ = __.require('lib', 'promises')
 const error_ = __.require('lib', 'error')
 const libUtils = require('../lib_utils.js')
 
+const replaceCreated = function (data) {
+  return Versions.view('timestamps')
+  .then(libUtils.compact)
+  .then((index) => libUtils.setCreatedTimestamps(index, data))
+}
+
 module.exports = function (typeName, model) {
   return {
     byId: function (id) {
       return db.viewByKey('byId', [typeName, id])
       .then(_.Log(`${typeName} byId`))
     },
-    filter: function(filter_string) {
+    filter: function (filter_string) {
       const uriBuilder = function (item, hostname, item_type) {
         return `${hostname}/${item_type}/${item.journal}`
       }
 
       const convertArrayToTypeFeatureCollection = function (data_array) {
-        return libUtils.convertArrayToFeatureCollection(data_array,typeName,`/${filter_string}`, uriBuilder)
+        return libUtils.convertArrayToFeatureCollection(data_array, typeName, `/${filter_string}`, uriBuilder)
       }
 
-      if(filter_string == '') {
+      if (filter_string === '') {
         return db.viewByKeyRange('currentVersionById', [typeName, '0'], [typeName, 'z'])
+        .then(libUtils.appendCreated)
+        .then(replaceCreated)
         .then(convertArrayToTypeFeatureCollection)
         .then(_.Log(`${typeName} filter all`))
       } else {
-        const key = filter_string.replace(/=.*$/,''),
-              value = filter_string.split('=')[1]
+        const key = filter_string.replace(/=.*$/, '')
+        const value = filter_string.split('=')[1]
 
         var startkey, endkey
-        if(value) {
+        if (value) {
           startkey = [typeName, key, value]
           endkey = startkey
         } else {
           startkey = [typeName, key, ' ']
-          endkey =  [typeName, key, '\u9999']
+          endkey = [typeName, key, '\u9999']
         }
         return db.viewByKeyRange('byAttribute', startkey, endkey)
+        .then(libUtils.appendCreated)
+        .then(replaceCreated)
         .then(convertArrayToTypeFeatureCollection)
         .then(_.Log(`${typeName} filter byAttribute "${key}"="${value}"`))
       }
-
     },
     create: function (data) {
       // first make sure we have valid data
@@ -79,15 +89,19 @@ module.exports = function (typeName, model) {
       return db.viewByKey('currentVersionById', [typeName, id])
       .then(_.Log('currentVersionById'))
       .then(libUtils.reject404)
+      .then((data) => libUtils.appendCreated([data]))
+      .then(libUtils.unpack)
+      .then((data) => replaceCreated([data]))
+      .then(libUtils.unpack)
       .then(Version.parseCurrentVersion)
     },
     versionsById: function (id) {
       const uriBuilder = function (item, hostname, item_type) {
-        return `${hostname}/${item_type}/${item.journal}/version/${item._versionId}`
+        return `${hostname}/${item_type}/${item.journal}/version/${item._id}`
       }
 
       const convertArrayToVersionTypeFeatureCollection = function (resultArray) {
-        return libUtils.convertArrayToFeatureCollection(resultArray, typeName, `/${id}/versions`, uriBuilder )
+        return libUtils.convertArrayToFeatureCollection(resultArray, typeName, `/${id}/versions`, uriBuilder)
       }
 
       const startKey = [typeName, id]
@@ -96,6 +110,8 @@ module.exports = function (typeName, model) {
       return db.viewByKeyRange('versionsById', startKey, endKey)
       .then(_.Log('versionsById'))
       .then(libUtils.rejectEmptyCollection404)
+      .then(libUtils.appendCreated)
+      .then(replaceCreated)
       .then(convertArrayToVersionTypeFeatureCollection)
       .then(_.Log(`${typeName} versions for ${id}`))
     },
@@ -105,9 +121,13 @@ module.exports = function (typeName, model) {
 
       return db.viewByKeyRange('versionsById', startKey, endKey)
       .then(_.Log('viewByKeyRangeResult'))
-      .then(function (result) { return result[0] } )
+      .then(function (result) { return result[0] })
       .then(_.Log('extractedItem'))
       .then(libUtils.reject404)
+      .then((data) => libUtils.appendCreated([data]))
+      .then(libUtils.unpack)
+      .then((data) => replaceCreated([data]))
+      .then(libUtils.unpack)
       .then(Version.parseCurrentVersion)
     },
     update: function (data, journalId) {
