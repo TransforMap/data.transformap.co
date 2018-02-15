@@ -3,7 +3,7 @@ const __ = CONFIG.universalPath
 const _ = __.require('lib', 'utils')
 const error_ = __.require('lib', 'error')
 
-const db = __.require('lib', 'db/db')('things', 'journals')
+const Journals = __.require('lib', 'db/db')('things', 'journals')
 const Promise = require('bluebird')
 
 const compact = function (array) {
@@ -28,7 +28,7 @@ const setCreatedTimestamp = function (feature, index) {
 }
 
 const setCreatedIds = function (index, featureArray) {
-  return Promise.map(featureArray, (feature) => this.setCreatedId(feature, index))
+  return Promise.map(featureArray, (feature) => setCreatedId(feature, index))
 }
 
 const setCreatedId = function (feature, index) {
@@ -36,10 +36,16 @@ const setCreatedId = function (feature, index) {
   return feature
 }
 
-const appendCreatedVersions = function (featureArray) {
-  return db.view('firstVersionById')
+const appendCreated = function (featureArray) {
+  return Journals.view('firstVersionById')
   .then(compact)
-  .then((data) => this.setCreatedIds(data, featureArray))
+  .then((data) => setCreatedIds(data, featureArray))
+}
+
+const replaceCreated = function (featureArray, versionsStore) {
+  return versionsStore.view('timestamps')
+  .then(compact)
+  .then((index) => this.setCreatedTimestamps(index, featureArray))
 }
 
 module.exports = {
@@ -86,7 +92,8 @@ module.exports = {
     return feature_collection
   },
 
-  appendCreatedVersions: appendCreatedVersions,
+  appendCreated: appendCreated,
+  replaceCreated: replaceCreated,
   setCreatedId: setCreatedId,
   setCreatedIds: setCreatedIds,
   setCreatedTimestamp: setCreatedTimestamp,

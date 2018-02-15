@@ -16,14 +16,8 @@ module.exports = function () {
     return libUtils.convertArrayToFeatureCollection(resultArray, 'place', route, uriBuilder)
   }
 
-  const appendCreated = function (featureArray) {
-    return libUtils.appendCreatedVersions(featureArray)
-  }
-
-  const replaceCreated = function (featureArray) {
-    return db.view('timestamps')
-    .then(libUtils.compact)
-    .then((index) => libUtils.setCreatedTimestamps(index, featureArray))
+  const replaceCreatedVersions = function (data) {
+    return libUtils.replaceCreated(data, db)
   }
 
   return {
@@ -31,32 +25,32 @@ module.exports = function () {
       return db.get(id)
       .then(_.Log('get'))
       .then(libUtils.reject404)
-      .then((data) => libUtils.appendCreatedVersions([data]))
+      .then((data) => libUtils.appendCreated([data]))
       .then(libUtils.unpack)
-      .then((data) => replaceCreated([data]))
+      .then((data) => replaceCreatedVersions([data]))
       .then(libUtils.unpack)
       .then(Version.parseCurrentVersion)
     },
     all: function () {
       return db.viewDesc('byTimestamp')
       .then(_.Log('byTimestamp'))
-      .then(appendCreated)
-      .then(replaceCreated)
+      .then(libUtils.appendCreated)
+      .then(replaceCreatedVersions)
       .then((data) => convertArrayToTypeFeatureCollection(data, ''))
     },
     latest: function (count) {
       return db.viewDescWithLimit('byTimestamp', count)
       .then(_.Log(`byTimestamp with limit=${count}`))
-      .then(appendCreated)
-      .then(replaceCreated)
+      .then(libUtils.appendCreated)
+      .then(replaceCreatedVersions)
       .then((data) => convertArrayToTypeFeatureCollection(data, '/latest/' + count))
     },
     latestSince: function (upTo) {
       const now = (+new Date())
       return db.viewByKeyRange('byTimestamp', upTo, now)
       .then(_.Log(`byTimestamp since ${new Date(upTo).toUTCString()}`))
-      .then(appendCreated)
-      .then(replaceCreated)
+      .then(libUtils.appendCreated)
+      .then(replaceCreatedVersions)
       .then((data) => convertArrayToTypeFeatureCollection(data, '/since/' + upTo))
     }
   }
